@@ -1,31 +1,32 @@
+//  @ts-check
+
 /** @type {import('prettier').Config} */
 const config = {
-  endOfLine: "lf",
+  endOfLine: 'lf',
   semi: false,
-  singleQuote: false,
+  singleQuote: true,
+  trailingComma: 'all',
   tabWidth: 2,
-  trailingComma: "es5",
   importOrder: [
-    "<TYPES>",
-    "^(react/(.*)$)|^(react$)",
-    "^(next/(.*)$)|^(next$)",
-    "<THIRD_PARTY_MODULES>",
-    "",
-    "<TYPES>^[.|..|@]",
-    "^@/(.*)$",
-    "",
-    "^[../]",
-    "^[./]",
+    '<TYPES>',
+    '^(react/(.*)$)|^(react$)',
+    '<THIRD_PARTY_MODULES>',
+    '',
+    '<TYPES>^[.|..|@]',
+    '^@/(.*)$',
+    '',
+    '^[../]',
+    '^[./]',
   ],
   importOrderSeparation: false,
   importOrderSortSpecifiers: true,
   importOrderBuiltinModulesToTop: true,
-  importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
+  importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
   importOrderMergeDuplicateImports: true,
   importOrderCombineTypeAndValueImports: true,
   plugins: [
-    "@ianvs/prettier-plugin-sort-imports",
-    "prettier-plugin-tailwindcss",
+    '@ianvs/prettier-plugin-sort-imports',
+    'prettier-plugin-tailwindcss',
   ],
 }
 

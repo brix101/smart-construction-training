@@ -1,10 +1,10 @@
-import * as React from "react"
-import Link from "next/link"
-import { ArrowRightIcon } from "@radix-ui/react-icons"
-import { Slot } from "@radix-ui/react-slot"
+import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { Link } from '@tanstack/react-router'
+import { ArrowRightIcon } from 'lucide-react'
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface ContentSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
@@ -19,30 +19,30 @@ export function ContentSection({
   title,
   description,
   href,
-  linkText = "View all",
+  linkText = 'View all',
   children,
   className,
   asChild = false,
   ...props
 }: ContentSectionProps) {
-  const ChildrenShell = asChild ? Slot : "div"
+  const ChildrenShell = asChild ? Slot : 'div'
 
   return (
-    <section className={cn("space-y-6", className)} {...props}>
+    <section className={cn('space-y-6', className)} {...props}>
       <div className="flex items-center justify-between gap-4">
-        <div className="max-w-[58rem] flex-1 space-y-1">
-          <h2 className="font-heading text-3xl font-bold leading-[1.1] md:text-4xl">
+        <div className="max-w-232 flex-1 space-y-1">
+          <h2 className="font-heading text-3xl leading-[1.1] font-bold md:text-4xl">
             {title}
           </h2>
           {description ? (
-            <p className="max-w-[46rem] text-balance leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+            <p className="text-muted-foreground max-w-184 leading-normal text-balance sm:text-lg sm:leading-7">
               {description}
             </p>
           ) : null}
         </div>
         {href && (
           <Button variant="outline" className="hidden sm:flex" asChild>
-            <Link href={href}>
+            <Link to={href}>
               {linkText}
               <ArrowRightIcon className="ml-2 size-4" aria-hidden="true" />
               <span className="sr-only"> {linkText}</span>
@@ -54,7 +54,7 @@ export function ContentSection({
         <ChildrenShell
           className={cn(
             !asChild &&
-              "xs:grid-cols-2 grid gap-4 md:grid-cols-3 lg:grid-cols-4"
+              'xs:grid-cols-2 grid gap-4 md:grid-cols-3 lg:grid-cols-4',
           )}
         >
           {children}
@@ -65,7 +65,7 @@ export function ContentSection({
             className="mx-auto flex w-fit sm:hidden"
             asChild
           >
-            <Link href={href}>
+            <Link to={href}>
               {linkText}
               <ArrowRightIcon className="ml-2 size-4" aria-hidden="true" />
               <span className="sr-only"> {linkText}</span>

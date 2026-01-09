@@ -1,0 +1,10 @@
+import { postgres } from 'vite-plugin-db'
+
+export default postgres({
+  seed: {
+    type: 'sql-script',
+    path: 'drizzle/0000_public_wasp.sql',
+  },
+  referrer: 'create-tanstack',
+  dotEnvKey: 'VITE_DATABASE_URL',
+})

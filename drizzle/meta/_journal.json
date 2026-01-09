@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1739785159402,
-      "tag": "0000_aromatic_maestro",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1739794937757,
-      "tag": "0001_short_sebastian_shaw",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1740033990115,
-      "tag": "0002_bent_rawhide_kid",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1740997827342,
-      "tag": "0003_closed_prism",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1740998132888,
-      "tag": "0004_ancient_rocket_racer",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1740998830100,
-      "tag": "0005_fancy_stepford_cuckoos",
+      "when": 1767884695012,
+      "tag": "0000_public_wasp",
       "breakpoints": true
     }
   ]

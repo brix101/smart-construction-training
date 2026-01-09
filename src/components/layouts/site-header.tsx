@@ -1,37 +1,51 @@
-import type { User } from "@clerk/nextjs/server"
-import { ModeToggle } from "@/components/layouts//mode-toggle"
-import { AuthDropdown } from "@/components/layouts/auth-dropdown"
-import { MainNav } from "@/components/layouts/main-nav"
-import { MobileNav } from "@/components/layouts/mobile-nav"
-import { TopicCommandMenu } from "@/components/topic-command-menu"
-import { siteConfig } from "@/config/site"
-import { getCourseList } from "@/lib/actions/course"
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+  useUser,
+} from '@clerk/clerk-react'
+import { LayoutDashboardIcon, Users } from 'lucide-react'
 
-interface SiteHeaderProps {
-  user: User | null
-  isAdmin?: boolean
-}
+import { ModeToggle } from '@/components/mode-toggle'
+import { siteConfig } from '@/config/site'
 
-export async function SiteHeader({ user, isAdmin }: SiteHeaderProps) {
-  const coursePromises = await getCourseList()
-  const [allCourses] = await Promise.all([coursePromises])
+import { MainNav } from './main-nav'
 
-  const navItems = allCourses.map((course) => ({
-    title: course.name,
-    href: `/course/${course.id}`,
-    items: [],
-  }))
+export function SiteHeader() {
+  const { user } = useUser()
+  const isAdmin = user?.publicMetadata?.role === 'admin'
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="container flex h-16 items-center">
+    <header className="bg-background sticky top-0 z-50 w-full border-b">
+      <div className="container mx-auto flex h-16 items-center">
         <MainNav items={siteConfig.mainNav} />
-        <MobileNav sidebarNavItems={navItems} />
+        {/* <MobileNav sidebarNavItems={navItems} /> */}
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
-            <TopicCommandMenu />
+            {/* <TopicCommandMenu /> */}
             <ModeToggle />
-            <AuthDropdown user={user} isAdmin={isAdmin} />
+            <SignedIn>
+              <UserButton>
+                {isAdmin && (
+                  <UserButton.MenuItems>
+                    <UserButton.Link
+                      label="Dashboard"
+                      labelIcon={<LayoutDashboardIcon className="h-4 w-4" />}
+                      href="/dashboard/courses"
+                    />
+                    <UserButton.Link
+                      label="Users"
+                      labelIcon={<Users className="h-4 w-4" />}
+                      href="/dashboard/users"
+                    />
+                  </UserButton.MenuItems>
+                )}
+              </UserButton>
+            </SignedIn>
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
           </nav>
         </div>
       </div>
