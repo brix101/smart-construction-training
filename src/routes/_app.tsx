@@ -2,7 +2,7 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 import { SiteHeader } from '@/components/layouts/site-header'
 
-export const Route = createFileRoute('/_lobby')({
+export const Route = createFileRoute('/_app')({
   component: RouteComponent,
 })
 

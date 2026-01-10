@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LobbyRouteImport } from './routes/_lobby'
-import { Route as LobbyIndexRouteImport } from './routes/_lobby/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as DemoTrpcTodoRouteImport } from './routes/demo/trpc-todo'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
 import { Route as DemoTableRouteImport } from './routes/demo/table'
@@ -25,16 +25,16 @@ import { Route as DemoStartSsrIndexRouteImport } from './routes/demo/start.ssr.i
 import { Route as DemoStartSsrSpaModeRouteImport } from './routes/demo/start.ssr.spa-mode'
 import { Route as DemoStartSsrFullSsrRouteImport } from './routes/demo/start.ssr.full-ssr'
 import { Route as DemoStartSsrDataOnlyRouteImport } from './routes/demo/start.ssr.data-only'
-import { Route as LobbyCIdChar123SlugChar125RouteImport } from './routes/_lobby/c.$id.{-$slug}'
+import { Route as AppCIdChar123SlugChar125RouteImport } from './routes/_app/c.$id.{-$slug}'
 
-const LobbyRoute = LobbyRouteImport.update({
-  id: '/_lobby',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LobbyIndexRoute = LobbyIndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => LobbyRoute,
+  getParentRoute: () => AppRoute,
 } as any)
 const DemoTrpcTodoRoute = DemoTrpcTodoRouteImport.update({
   id: '/demo/trpc-todo',
@@ -106,11 +106,11 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
   path: '/demo/start/ssr/data-only',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LobbyCIdChar123SlugChar125Route =
-  LobbyCIdChar123SlugChar125RouteImport.update({
+const AppCIdChar123SlugChar125Route =
+  AppCIdChar123SlugChar125RouteImport.update({
     id: '/c/$id/{-$slug}',
     path: '/c/$id/{-$slug}',
-    getParentRoute: () => LobbyRoute,
+    getParentRoute: () => AppRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -119,13 +119,13 @@ export interface FileRoutesByFullPath {
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
-  '/': typeof LobbyIndexRoute
+  '/': typeof AppIndexRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
-  '/c/$id/{-$slug}': typeof LobbyCIdChar123SlugChar125Route
+  '/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -137,13 +137,13 @@ export interface FileRoutesByTo {
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
-  '/': typeof LobbyIndexRoute
+  '/': typeof AppIndexRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
-  '/c/$id/{-$slug}': typeof LobbyCIdChar123SlugChar125Route
+  '/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -151,19 +151,19 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_lobby': typeof LobbyRouteWithChildren
+  '/_app': typeof AppRouteWithChildren
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
-  '/_lobby/': typeof LobbyIndexRoute
+  '/_app/': typeof AppIndexRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
-  '/_lobby/c/$id/{-$slug}': typeof LobbyCIdChar123SlugChar125Route
+  '/_app/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -208,19 +208,19 @@ export interface FileRouteTypes {
     | '/demo/start/ssr'
   id:
     | '__root__'
-    | '/_lobby'
+    | '/_app'
     | '/demo/clerk'
     | '/demo/drizzle'
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
-    | '/_lobby/'
+    | '/_app/'
     | '/api/trpc/$'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
-    | '/_lobby/c/$id/{-$slug}'
+    | '/_app/c/$id/{-$slug}'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -228,7 +228,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  LobbyRoute: typeof LobbyRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
   DemoClerkRoute: typeof DemoClerkRoute
   DemoDrizzleRoute: typeof DemoDrizzleRoute
   DemoTableRoute: typeof DemoTableRoute
@@ -247,19 +247,19 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_lobby': {
-      id: '/_lobby'
+    '/_app': {
+      id: '/_app'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof LobbyRouteImport
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_lobby/': {
-      id: '/_lobby/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LobbyIndexRouteImport
-      parentRoute: typeof LobbyRoute
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
     }
     '/demo/trpc-todo': {
       id: '/demo/trpc-todo'
@@ -359,30 +359,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoStartSsrDataOnlyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_lobby/c/$id/{-$slug}': {
-      id: '/_lobby/c/$id/{-$slug}'
+    '/_app/c/$id/{-$slug}': {
+      id: '/_app/c/$id/{-$slug}'
       path: '/c/$id/{-$slug}'
       fullPath: '/c/$id/{-$slug}'
-      preLoaderRoute: typeof LobbyCIdChar123SlugChar125RouteImport
-      parentRoute: typeof LobbyRoute
+      preLoaderRoute: typeof AppCIdChar123SlugChar125RouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
-interface LobbyRouteChildren {
-  LobbyIndexRoute: typeof LobbyIndexRoute
-  LobbyCIdChar123SlugChar125Route: typeof LobbyCIdChar123SlugChar125Route
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppCIdChar123SlugChar125Route: typeof AppCIdChar123SlugChar125Route
 }
 
-const LobbyRouteChildren: LobbyRouteChildren = {
-  LobbyIndexRoute: LobbyIndexRoute,
-  LobbyCIdChar123SlugChar125Route: LobbyCIdChar123SlugChar125Route,
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppCIdChar123SlugChar125Route: AppCIdChar123SlugChar125Route,
 }
 
-const LobbyRouteWithChildren = LobbyRoute._addFileChildren(LobbyRouteChildren)
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  LobbyRoute: LobbyRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
   DemoClerkRoute: DemoClerkRoute,
   DemoDrizzleRoute: DemoDrizzleRoute,
   DemoTableRoute: DemoTableRoute,

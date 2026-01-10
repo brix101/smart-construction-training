@@ -21,10 +21,10 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
 const searchSchema = z.object({
-  topicId: z.string().optional(),
+  topic: z.string().optional(),
 })
 
-export const Route = createFileRoute('/_lobby/c/$id/{-$slug}')({
+export const Route = createFileRoute('/_app/c/$id/{-$slug}')({
   validateSearch: searchSchema,
   loader: async ({ params, context: { queryClient, trpc } }) => {
     const category = await queryClient.ensureQueryData(
@@ -138,7 +138,7 @@ function CourseContainer() {
   }
 
   const topics = course.topics || []
-  const topicId = search.topicId ?? topics[0]?.id
+  const topicId = search.topic ?? topics[0]?.id
 
   return (
     <Shell>
@@ -170,7 +170,7 @@ function CourseContainer() {
                     key={topic.id}
                     to="/c/$id/{-$slug}"
                     params={{ id, slug: course.id }}
-                    search={{ topicId: topic.id }}
+                    search={{ topic: topic.id }}
                   >
                     <span
                       className={cn(

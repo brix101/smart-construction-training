@@ -1,78 +1,184 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+'use client'
 
-type Theme = 'dark' | 'light' | 'system'
+import * as React from 'react'
+import { ComputerIcon, MoonIcon, SunIcon } from 'lucide-react'
+import * as z from 'zod/v4'
 
-type ThemeProviderProps = {
-  children: React.ReactNode
-  defaultTheme?: Theme
-  storageKey?: string
+import { Button } from './ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu'
+
+const ThemeModeSchema = z.enum(['light', 'dark', 'auto'])
+
+const themeKey = 'theme-mode'
+
+export type ThemeMode = z.output<typeof ThemeModeSchema>
+export type ResolvedTheme = Exclude<ThemeMode, 'auto'>
+
+const getStoredThemeMode = (): ThemeMode => {
+  if (typeof window === 'undefined') return 'auto'
+  try {
+    const storedTheme = localStorage.getItem(themeKey)
+    return ThemeModeSchema.parse(storedTheme)
+  } catch {
+    return 'auto'
+  }
 }
 
-type ThemeProviderState = {
-  theme: Theme
-  setTheme: (theme: Theme) => void
+const setStoredThemeMode = (theme: ThemeMode) => {
+  try {
+    const parsedTheme = ThemeModeSchema.parse(theme)
+    localStorage.setItem(themeKey, parsedTheme)
+  } catch {
+    // Silently fail if localStorage is unavailable
+  }
 }
 
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null,
+const getSystemTheme = () => {
+  if (typeof window === 'undefined') return 'light'
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
 }
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+const updateThemeClass = (themeMode: ThemeMode) => {
+  const root = document.documentElement
+  root.classList.remove('light', 'dark', 'auto')
+  const newTheme = themeMode === 'auto' ? getSystemTheme() : themeMode
+  root.classList.add(newTheme)
 
-export function ThemeProvider({
-  children,
-  defaultTheme = 'system',
-  storageKey = 'vite-ui-theme',
-  ...props
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme | undefined>(undefined)
+  if (themeMode === 'auto') {
+    root.classList.add('auto')
+  }
+}
 
-  // Set theme from localStorage or defaultTheme on client only
-  useEffect(() => {
-    const storedTheme = (typeof window !== 'undefined' &&
-      window.localStorage.getItem(storageKey)) as Theme | null
-    setTheme(storedTheme || defaultTheme)
-  }, [defaultTheme, storageKey])
+const setupPreferredListener = () => {
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  const handler = () => updateThemeClass('auto')
+  mediaQuery.addEventListener('change', handler)
+  return () => mediaQuery.removeEventListener('change', handler)
+}
 
-  useEffect(() => {
-    if (!theme) return
-    const root = window.document.documentElement
-    root.classList.remove('light', 'dark')
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+const getNextTheme = (current: ThemeMode): ThemeMode => {
+  const themes: ThemeMode[] =
+    getSystemTheme() === 'dark'
+      ? ['auto', 'light', 'dark']
+      : ['auto', 'dark', 'light']
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return themes[(themes.indexOf(current) + 1) % themes.length]!
+}
+
+export const themeDetectorScript = (function () {
+  function themeFn() {
+    const isValidTheme = (theme: string): theme is ThemeMode => {
+      const validThemes = ['light', 'dark', 'auto'] as const
+      return validThemes.includes(theme as ThemeMode)
+    }
+
+    const storedTheme = localStorage.getItem('theme-mode') ?? 'auto'
+    const validTheme = isValidTheme(storedTheme) ? storedTheme : 'auto'
+
+    if (validTheme === 'auto') {
+      const autoTheme = window.matchMedia('(prefers-color-scheme: dark)')
         .matches
         ? 'dark'
         : 'light'
-      root.classList.add(systemTheme)
-      return
+      document.documentElement.classList.add(autoTheme, 'auto')
+    } else {
+      document.documentElement.classList.add(validTheme)
     }
-    root.classList.add(theme)
-  }, [theme])
+  }
+  return `(${themeFn.toString()})();`
+})()
 
-  const value = {
-    theme: theme || defaultTheme,
-    setTheme: (t: Theme) => {
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(storageKey, t)
-      }
-      setTheme(t)
-    },
+interface ThemeContextProps {
+  themeMode: ThemeMode
+  resolvedTheme: ResolvedTheme
+  setTheme: (theme: ThemeMode) => void
+  toggleMode: () => void
+}
+const ThemeContext = React.createContext<ThemeContextProps | undefined>(
+  undefined,
+)
+
+export function ThemeProvider({ children }: React.PropsWithChildren) {
+  const [themeMode, setThemeMode] = React.useState(getStoredThemeMode)
+
+  React.useEffect(() => {
+    if (themeMode !== 'auto') return
+    return setupPreferredListener()
+  }, [themeMode])
+
+  const resolvedTheme = themeMode === 'auto' ? getSystemTheme() : themeMode
+
+  const setTheme = (newTheme: ThemeMode) => {
+    setThemeMode(newTheme)
+    setStoredThemeMode(newTheme)
+    updateThemeClass(newTheme)
   }
 
-  // Only render children when theme is set (prevents hydration mismatch)
+  const toggleMode = () => {
+    setTheme(getNextTheme(themeMode))
+  }
+
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
-      {theme ? children : null}
-    </ThemeProviderContext.Provider>
+    <ThemeContext
+      value={{
+        themeMode,
+        resolvedTheme,
+        setTheme,
+        toggleMode,
+      }}
+    >
+      <script
+        dangerouslySetInnerHTML={{ __html: themeDetectorScript }}
+        suppressHydrationWarning
+      />
+      {children}
+    </ThemeContext>
   )
 }
 
-export const useTheme = () => {
-  const context = useContext(ThemeProviderContext)
-
-  if (context === undefined)
+export function useTheme() {
+  const context = React.use(ThemeContext)
+  if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider')
-
+  }
   return context
+}
+
+export function ThemeToggle() {
+  const { setTheme } = useTheme()
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          className="[&>svg]:absolute [&>svg]:size-5 [&>svg]:scale-0"
+        >
+          <SunIcon className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+          <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          <ComputerIcon className="auto:scale-100!" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme('light')}>
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('dark')}>
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme('auto')}>
+          System
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }
