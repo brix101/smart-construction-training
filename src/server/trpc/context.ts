@@ -1,13 +1,10 @@
-import { createClerkClient } from '@clerk/backend'
 import { jwtDecode } from 'jwt-decode'
 
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { db } from '@/server/db'
 import { SessionJwtPayload } from '@/types/session'
 
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-})
+import { clerkClient } from '../common/clerk'
 
 function getCookies(cookieHeader: string) {
   return Object.fromEntries(
