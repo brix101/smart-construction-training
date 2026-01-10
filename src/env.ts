@@ -11,6 +11,7 @@ export const env = createEnv({
       .default('development'),
     DATABASE_URL: z.url(),
     IS_ANALYTICS_ENABLED: z.coerce.boolean().default(false),
+    CLERK_SECRET_KEY: z.string().min(1),
   },
 
   /**

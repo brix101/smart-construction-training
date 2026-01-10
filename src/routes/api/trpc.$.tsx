@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 
-import { createContext } from '@/server/context'
-import { appRouter } from '@/server/routes'
+import { env } from '@/env'
+import { createContext } from '@/server/trpc/context'
+import { appRouter } from '@/server/trpc/router/_app'
 
 const handler = (req: Request) =>
   fetchRequestHandler({
@@ -10,9 +11,12 @@ const handler = (req: Request) =>
     req,
     router: appRouter,
     createContext,
-    // onError({ error, path }) {
-    //   console.error(`>>> tRPC Error on '${path}'`, error)
-    // },
+    onError:
+      env.NODE_ENV === 'development'
+        ? ({ path, error }) => {
+            console.error(`❌ tRPC failed on ${path}: ${error}`)
+          }
+        : undefined,
   })
 
 export const Route = createFileRoute('/api/trpc/$')({

@@ -5,7 +5,7 @@ import { CategoryCard, CategoryCardSkeleton } from '@/components/category-card'
 import { ContentSection } from '@/components/content-section'
 import { Shell } from '@/components/shell'
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute('/_lobby/')({ component: App })
 
 function App() {
   const { trpc } = Route.useRouteContext()

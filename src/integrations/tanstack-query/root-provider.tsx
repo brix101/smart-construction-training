@@ -3,7 +3,7 @@ import { createTRPCClient, httpBatchStreamLink, loggerLink } from '@trpc/client'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import superjson from 'superjson'
 
-import type { AppRouter } from '@/server/routes'
+import type { AppRouter } from '@/server/trpc/router/_app'
 import { TRPCProvider } from '@/integrations/trpc/react'
 
 function getUrl() {

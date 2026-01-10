@@ -2,12 +2,11 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import {
   createRootRouteWithContext,
   HeadContent,
-  Outlet,
   Scripts,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 
-import type { AppRouter } from '@/server/routes'
+import type { AppRouter } from '@/server/trpc/router/_app'
 import type { QueryClient } from '@tanstack/react-query'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -42,18 +41,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
     ],
   }),
-  component: RootComponent,
+  shellComponent: RootDocument,
 })
 
-function RootComponent() {
-  return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
-  )
-}
-
 function RootDocument({ children }: { children: React.ReactNode }) {
+  console.log('Rendering RootDocument')
   return (
     <ThemeProvider>
       <html lang="en">

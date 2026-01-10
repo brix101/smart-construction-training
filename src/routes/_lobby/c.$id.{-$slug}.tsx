@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
-import { zodValidator } from '@tanstack/zod-adapter'
 import { ArrowLeft, PlayIcon } from 'lucide-react'
 import z from 'zod'
 
@@ -26,7 +25,7 @@ const searchSchema = z.object({
 })
 
 export const Route = createFileRoute('/_lobby/c/$id/{-$slug}')({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: searchSchema,
   loader: async ({ params, context: { queryClient, trpc } }) => {
     const category = await queryClient.ensureQueryData(
       trpc.categories.getById.queryOptions({ categoryId: params.id }),
