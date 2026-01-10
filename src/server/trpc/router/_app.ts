@@ -1,6 +1,6 @@
-import { categoryRouter } from '@/server/routes/categories'
-import { coursesRouter } from '@/server/routes/courses'
-import { topicsRouter } from '@/server/routes/topics'
+import { categoryRouter } from '@/server/trpc/router/categories'
+import { coursesRouter } from '@/server/trpc/router/courses'
+import { topicsRouter } from '@/server/trpc/router/topics'
 
 import { createTRPCRouter } from '../trpc'
 

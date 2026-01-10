@@ -6,13 +6,13 @@ import { nitro } from 'nitro/vite'
 import { defineConfig } from 'vite'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 
-// import neon from './neon-vite-plugin.ts'
+import neon from './neon-vite-plugin.ts'
 
 const config = defineConfig({
   plugins: [
     devtools(),
     nitro(),
-    // neon,
+    neon,
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],

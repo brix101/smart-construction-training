@@ -3,10 +3,10 @@ import { and, eq, sql } from 'drizzle-orm'
 import z from 'zod'
 
 import { topics } from '@/server/db/schema'
-import { publicProcedure } from '@/server/trpc'
+import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const topicsRouter = {
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ topicId: z.string() }))
     .query(async ({ ctx, input }) => {
       const topic = await ctx.db.query.topics.findFirst({
@@ -22,7 +22,7 @@ export const topicsRouter = {
 
       return topic
     }),
-  getByCourseId: publicProcedure
+  getByCourseId: protectedProcedure
     .input(z.object({ courseId: z.string() }))
     .query(async ({ ctx, input }) => {
       try {

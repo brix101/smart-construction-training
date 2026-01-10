@@ -3,10 +3,10 @@ import { and, asc, countDistinct, eq } from 'drizzle-orm'
 import z from 'zod'
 
 import { categories, courseCategories } from '@/server/db/schema'
-import { publicProcedure } from '@/server/trpc'
+import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const categoryRouter = {
-  list: publicProcedure.query(async ({ ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     try {
       const list = await ctx.db
         .select({
@@ -31,7 +31,7 @@ export const categoryRouter = {
       return []
     }
   }),
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ categoryId: z.string() }))
     .query(async ({ ctx, input }) => {
       if (input.categoryId === 'logo.png') {

@@ -3,10 +3,10 @@ import { asc, eq, sql } from 'drizzle-orm'
 import z from 'zod'
 
 import { courseCategories, courses, topics } from '@/server/db/schema'
-import { publicProcedure } from '@/server/trpc'
+import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const coursesRouter = {
-  getByCategoryId: publicProcedure
+  getByCategoryId: protectedProcedure
     .input(z.object({ categoryId: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
@@ -32,7 +32,7 @@ export const coursesRouter = {
         return []
       }
     }),
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ courseId: z.string() }))
     .query(async ({ ctx, input }) => {
       if (input.courseId === 'logo.png') {
