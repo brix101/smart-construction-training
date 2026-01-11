@@ -14,7 +14,7 @@ export default function AppClerkProvider({
   return (
     <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}
-      afterSignOutUrl="/"
+      afterSignOutUrl="/sign-in"
       appearance={{
         theme: shadcn,
       }}

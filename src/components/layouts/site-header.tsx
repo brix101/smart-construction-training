@@ -1,20 +1,20 @@
 import {
+  Protect,
   SignedIn,
   SignedOut,
   SignInButton,
   UserButton,
-  useUser,
 } from '@clerk/clerk-react'
 import { LayoutDashboardIcon, Users } from 'lucide-react'
 
+import { ThemeToggle } from '@/components/theme-provider'
 import { siteConfig } from '@/config/site'
+import { usePermissions } from '@/hooks/use-permissions'
 
-import { ThemeToggle } from '../theme-provider'
 import { MainNav } from './main-nav'
 
 export function SiteHeader() {
-  const { user } = useUser()
-  const isAdmin = user?.publicMetadata?.role === 'admin'
+  const { has } = usePermissions()
 
   return (
     <header className="bg-background sticky top-0 z-50 w-full border-b">
@@ -26,8 +26,11 @@ export function SiteHeader() {
             {/* <TopicCommandMenu /> */}
             <ThemeToggle />
             <SignedIn>
-              <UserButton>
-                {isAdmin && (
+              <Protect
+                condition={() => has('org:sys_memberships:manage')}
+                fallback={<UserButton />}
+              >
+                <UserButton>
                   <UserButton.MenuItems>
                     <UserButton.Link
                       label="Dashboard"
@@ -40,8 +43,8 @@ export function SiteHeader() {
                       href="/dashboard/users"
                     />
                   </UserButton.MenuItems>
-                )}
-              </UserButton>
+                </UserButton>
+              </Protect>
             </SignedIn>
             <SignedOut>
               <SignInButton />

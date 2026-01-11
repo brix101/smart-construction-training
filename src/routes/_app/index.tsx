@@ -5,7 +5,10 @@ import { CategoryCard, CategoryCardSkeleton } from '@/components/category-card'
 import { ContentSection } from '@/components/content-section'
 import { Shell } from '@/components/shell'
 
-export const Route = createFileRoute('/_app/')({ component: App })
+export const Route = createFileRoute('/_app/')({
+  loader: () => {},
+  component: App,
+})
 
 function App() {
   const { trpc } = Route.useRouteContext()

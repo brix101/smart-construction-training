@@ -38,6 +38,7 @@ export const createContext = async (opts: FetchCreateContextFnOptions) => {
 
     const user = await clerkClient.users.getUser(decoded.sub)
 
+    console.log(user)
     return {
       session: { user },
       db,
