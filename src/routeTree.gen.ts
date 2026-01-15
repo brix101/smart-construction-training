@@ -25,7 +25,9 @@ import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api
 import { Route as DemoApiTqTodosRouteImport } from './routes/demo/api.tq-todos'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
+import { Route as AdminDashboardUsersRouteImport } from './routes/_admin/dashboard/users'
 import { Route as AdminDashboardCoursesRouteImport } from './routes/_admin/dashboard/courses'
+import { Route as AdminDashboardCategoriesRouteImport } from './routes/_admin/dashboard/categories'
 import { Route as DemoStartSsrIndexRouteImport } from './routes/demo/start.ssr.index'
 import { Route as DemoStartSsrSpaModeRouteImport } from './routes/demo/start.ssr.spa-mode'
 import { Route as DemoStartSsrFullSsrRouteImport } from './routes/demo/start.ssr.full-ssr'
@@ -109,11 +111,22 @@ const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   path: '/api/trpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminDashboardUsersRoute = AdminDashboardUsersRouteImport.update({
+  id: '/dashboard/users',
+  path: '/dashboard/users',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDashboardCoursesRoute = AdminDashboardCoursesRouteImport.update({
   id: '/dashboard/courses',
   path: '/dashboard/courses',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminDashboardCategoriesRoute =
+  AdminDashboardCategoriesRouteImport.update({
+    id: '/dashboard/categories',
+    path: '/dashboard/categories',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const DemoStartSsrIndexRoute = DemoStartSsrIndexRouteImport.update({
   id: '/demo/start/ssr/',
   path: '/demo/start/ssr/',
@@ -150,7 +163,9 @@ export interface FileRoutesByFullPath {
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/': typeof AppIndexRoute
+  '/dashboard/categories': typeof AdminDashboardCategoriesRoute
   '/dashboard/courses': typeof AdminDashboardCoursesRoute
+  '/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
@@ -171,7 +186,9 @@ export interface FileRoutesByTo {
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/': typeof AppIndexRoute
+  '/dashboard/categories': typeof AdminDashboardCategoriesRoute
   '/dashboard/courses': typeof AdminDashboardCoursesRoute
+  '/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
@@ -196,7 +213,9 @@ export interface FileRoutesById {
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/_app/': typeof AppIndexRoute
+  '/_admin/dashboard/categories': typeof AdminDashboardCategoriesRoute
   '/_admin/dashboard/courses': typeof AdminDashboardCoursesRoute
+  '/_admin/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
@@ -219,7 +238,9 @@ export interface FileRouteTypes {
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
     | '/'
+    | '/dashboard/categories'
     | '/dashboard/courses'
+    | '/dashboard/users'
     | '/api/trpc/$'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
@@ -240,7 +261,9 @@ export interface FileRouteTypes {
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
     | '/'
+    | '/dashboard/categories'
     | '/dashboard/courses'
+    | '/dashboard/users'
     | '/api/trpc/$'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
@@ -264,7 +287,9 @@ export interface FileRouteTypes {
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
     | '/_app/'
+    | '/_admin/dashboard/categories'
     | '/_admin/dashboard/courses'
+    | '/_admin/dashboard/users'
     | '/api/trpc/$'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
@@ -411,11 +436,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTrpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin/dashboard/users': {
+      id: '/_admin/dashboard/users'
+      path: '/dashboard/users'
+      fullPath: '/dashboard/users'
+      preLoaderRoute: typeof AdminDashboardUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/dashboard/courses': {
       id: '/_admin/dashboard/courses'
       path: '/dashboard/courses'
       fullPath: '/dashboard/courses'
       preLoaderRoute: typeof AdminDashboardCoursesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/dashboard/categories': {
+      id: '/_admin/dashboard/categories'
+      path: '/dashboard/categories'
+      fullPath: '/dashboard/categories'
+      preLoaderRoute: typeof AdminDashboardCategoriesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/demo/start/ssr/': {
@@ -457,11 +496,15 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminDashboardCategoriesRoute: typeof AdminDashboardCategoriesRoute
   AdminDashboardCoursesRoute: typeof AdminDashboardCoursesRoute
+  AdminDashboardUsersRoute: typeof AdminDashboardUsersRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminDashboardCategoriesRoute: AdminDashboardCategoriesRoute,
   AdminDashboardCoursesRoute: AdminDashboardCoursesRoute,
+  AdminDashboardUsersRoute: AdminDashboardUsersRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

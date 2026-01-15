@@ -1,4 +1,5 @@
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import {
   createRootRouteWithContext,
   HeadContent,
@@ -11,7 +12,6 @@ import type { QueryClient } from '@tanstack/react-query'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import { ThemeProvider } from '@/components/theme-provider'
 import ClerkProvider from '@/integrations/clerk/provider'
-import TanStackQueryDevtools from '@/integrations/tanstack-query/devtools'
 
 import appCss from '../styles.css?url'
 
@@ -63,7 +63,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   name: 'Tanstack Router',
                   render: <TanStackRouterDevtoolsPanel />,
                 },
-                TanStackQueryDevtools,
+                {
+                  name: 'Tanstack Query',
+                  render: <ReactQueryDevtoolsPanel />,
+                },
               ]}
             />
           </ClerkProvider>

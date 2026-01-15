@@ -1,4 +1,4 @@
-import type { MainNavItem } from '@/types'
+import type { DashboardConfig, MainNavItem } from '@/types'
 
 export type SiteConfig = typeof siteConfig
 
@@ -19,4 +19,27 @@ export const siteConfig = {
       ],
     },
   ] satisfies MainNavItem[],
+}
+
+export const dashboardConfig: DashboardConfig = {
+  navItems: [
+    {
+      title: 'Courses',
+      href: '/dashboard/courses',
+      icon: 'courses',
+      items: [],
+    },
+    {
+      title: 'Categories',
+      href: '/dashboard/categories',
+      icon: 'categories',
+      items: [],
+    },
+    {
+      title: 'Users',
+      href: '/dashboard/users',
+      icon: 'users',
+      items: [],
+    },
+  ],
 }

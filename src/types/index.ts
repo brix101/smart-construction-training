@@ -1,4 +1,4 @@
-import type { Icons } from '@/components/icons'
+import { Icons } from '@/components/icons'
 
 export interface NavItem {
   title: string
@@ -6,7 +6,6 @@ export interface NavItem {
   disabled?: boolean
   external?: boolean
   icon?: keyof typeof Icons
-  label?: string
   description?: string
 }
 
@@ -29,7 +28,9 @@ export interface FooterItem {
 
 export type MainNavItem = NavItemWithOptionalChildren
 
-export type SidebarNavItem = NavItemWithChildren
+export type DashboardConfig = {
+  navItems: NavItemWithChildren[]
+}
 
 export interface Option {
   label: string
