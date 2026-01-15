@@ -8,8 +8,8 @@ import {
 import { LayoutDashboardIcon, Users } from 'lucide-react'
 
 import { ThemeToggle } from '@/components/theme-provider'
-import { siteConfig } from '@/config/site'
 import { usePermissions } from '@/hooks/use-permissions'
+import { siteConfig } from '@/lib/config'
 
 import { MainNav } from './main-nav'
 

@@ -64,10 +64,20 @@ export function CourseCard({ course, href, isDisabled }: CourseCardProps) {
   )
 }
 
-export function CourseCardSkeleton() {
+interface CourseCardSkeletonProps {
+  hasBadge?: boolean
+}
+
+export function CourseCardSkeleton(props: CourseCardSkeletonProps) {
   return (
     <Card className="grid grid-cols-4 overflow-hidden py-0">
       <AspectRatio className="col-span-1" ratio={21 / 9}>
+        <Skeleton
+          className={cn(
+            'absolute top-2 right-2 h-6 w-20 rounded-sm px-2 py-1',
+            props.hasBadge ? 'visible' : 'invisible',
+          )}
+        />
         <Skeleton className="h-full w-full rounded-none" />
       </AspectRatio>
       <CardContent className="col-span-3 py-6">

@@ -7,7 +7,7 @@ config({ path: ['.env.local', '.env'] })
 
 export default defineConfig({
   out: './drizzle',
-  schema: './src/db/schema.ts',
+  schema: './src/server/db/schema.ts',
   dialect: 'postgresql',
   casing: 'snake_case',
   dbCredentials: {

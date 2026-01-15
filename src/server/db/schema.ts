@@ -1,20 +1,32 @@
 import { relations, sql } from 'drizzle-orm'
-import { pgEnum, pgTable, primaryKey } from 'drizzle-orm/pg-core'
+import { index, pgEnum, pgTable, primaryKey } from 'drizzle-orm/pg-core'
 
-export const courses = pgTable('courses', (t) => ({
-  id: t.uuid().notNull().primaryKey().defaultRandom(),
-  name: t.varchar({ length: 256 }).unique().notNull(),
-  description: t.text(),
-  level: t.integer().notNull().default(1),
-  sequence: t.integer().notNull().default(0),
-  imgSrc: t.text(),
-  isPublished: t.boolean().notNull().default(false),
-  isActive: t.boolean().notNull().default(true),
-  createdAt: t.timestamp().defaultNow().notNull(),
-  updatedAt: t
-    .timestamp({ mode: 'string', withTimezone: true })
-    .$onUpdateFn(() => sql`now()`),
-}))
+export const courses = pgTable(
+  'courses',
+  (t) => ({
+    id: t.uuid().notNull().primaryKey().defaultRandom(),
+    name: t.varchar({ length: 256 }).unique().notNull(),
+    description: t.text(),
+    level: t.integer().notNull().default(1),
+    sequence: t.integer().notNull().default(0),
+    imgSrc: t.text(),
+    isPublished: t.boolean().notNull().default(false),
+    isActive: t.boolean().notNull().default(true),
+    createdAt: t.timestamp().defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: 'string', withTimezone: true })
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (t) => [
+    index('courses_search_idx').using(
+      'gin',
+      sql`(
+      setweight(to_tsvector('english', coalesce(${t.name}, '')), 'A') ||
+      setweight(to_tsvector('english', coalesce(${t.description}, '')), 'B')
+    )`,
+    ),
+  ],
+)
 
 export type Course = typeof courses.$inferSelect
 export type NewCourse = typeof courses.$inferInsert
@@ -24,21 +36,33 @@ export const coursesRelations = relations(courses, ({ many }) => ({
   categories: many(courseCategories),
 }))
 
-export const topics = pgTable('topics', (t) => ({
-  id: t.uuid().notNull().primaryKey().defaultRandom(),
-  name: t.varchar({ length: 256 }).notNull(),
-  youtubeUrl: t.text().notNull(),
-  description: t.text(),
-  courseId: t
-    .uuid()
-    .references(() => courses.id, { onDelete: 'cascade' })
-    .notNull(),
-  isActive: t.boolean().notNull().default(true),
-  createdAt: t.timestamp().defaultNow().notNull(),
-  updatedAt: t
-    .timestamp({ mode: 'string', withTimezone: true })
-    .$onUpdateFn(() => sql`now()`),
-}))
+export const topics = pgTable(
+  'topics',
+  (t) => ({
+    id: t.uuid().notNull().primaryKey().defaultRandom(),
+    name: t.varchar({ length: 256 }).notNull(),
+    youtubeUrl: t.text().notNull(),
+    description: t.text(),
+    courseId: t
+      .uuid()
+      .references(() => courses.id, { onDelete: 'cascade' })
+      .notNull(),
+    isActive: t.boolean().notNull().default(true),
+    createdAt: t.timestamp().defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: 'string', withTimezone: true })
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (t) => [
+    index('topics_search_idx').using(
+      'gin',
+      sql`(
+    setweight(to_tsvector('english', coalesce(${t.name}, '')), 'A') ||
+    setweight(to_tsvector('english', coalesce(${t.description}, '')), 'B')
+  )`,
+    ),
+  ],
+)
 
 export type Topic = typeof topics.$inferSelect
 export type NewTopic = typeof topics.$inferInsert
@@ -103,17 +127,29 @@ export const topicsToMaterialsRelations = relations(
   }),
 )
 
-export const categories = pgTable('categories', (t) => ({
-  id: t.uuid().notNull().primaryKey().defaultRandom(),
-  name: t.varchar({ length: 256 }).unique().notNull(),
-  description: t.text().notNull(),
-  imgSrc: t.text().notNull(),
-  isActive: t.boolean().notNull().default(true),
-  createdAt: t.timestamp().defaultNow().notNull(),
-  updatedAt: t
-    .timestamp({ mode: 'string', withTimezone: true })
-    .$onUpdateFn(() => sql`now()`),
-}))
+export const categories = pgTable(
+  'categories',
+  (t) => ({
+    id: t.uuid().notNull().primaryKey().defaultRandom(),
+    name: t.varchar({ length: 256 }).unique().notNull(),
+    description: t.text().notNull(),
+    imgSrc: t.text().notNull(),
+    isActive: t.boolean().notNull().default(true),
+    createdAt: t.timestamp().defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: 'string', withTimezone: true })
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (t) => [
+    index('categories_search_idx').using(
+      'gin',
+      sql`(
+      setweight(to_tsvector('english', coalesce(${t.name}, '')), 'A') ||
+      setweight(to_tsvector('english', coalesce(${t.description}, '')), 'B')
+    )`,
+    ),
+  ],
+)
 
 export type Category = typeof categories.$inferSelect
 

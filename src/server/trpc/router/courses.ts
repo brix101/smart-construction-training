@@ -1,11 +1,60 @@
 import { TRPCRouterRecord } from '@trpc/server'
-import { asc, eq, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, sql } from 'drizzle-orm'
 import z from 'zod'
 
-import { courseCategories, courses, topics } from '@/server/db/schema'
+import { searchParamsSchema } from '@/schema/search'
+import { Course, courseCategories, courses, topics } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const coursesRouter = {
+  list: protectedProcedure
+    .input(searchParamsSchema)
+    .query(async ({ ctx, input: { page, per_page, q, sort } }) => {
+      const fallbackPage = isNaN(page) || page < 1 ? 1 : page
+      const limit = isNaN(per_page) ? 10 : per_page
+      const offset = fallbackPage > 0 ? (fallbackPage - 1) * limit : 0
+
+      // Column and order to sort by
+      const [column, order] = (sort?.split('.') as [
+        keyof Course | undefined,
+        'asc' | 'desc' | undefined,
+      ]) ?? ['createdAt', 'desc']
+
+      try {
+        const filter = [eq(courses.isActive, true)]
+
+        if (q) {
+          filter.push(
+            sql`(
+                setweight(to_tsvector('english', ${courses.name}), 'A') ||
+                setweight(to_tsvector('english', ${courses.description}), 'B'))
+                @@ to_tsquery('english', ${q}
+              )`,
+          )
+        }
+
+        const whereFilter = and(...filter)
+
+        const list = await ctx.db
+          .select()
+          .from(courses)
+          .where(whereFilter)
+          .orderBy(
+            column && column in courses
+              ? order === 'asc'
+                ? asc(courses[column])
+                : desc(courses[column])
+              : asc(courses.name),
+          )
+          .limit(limit)
+          .offset(offset)
+
+        return list
+      } catch (error) {
+        console.error(error)
+        return []
+      }
+    }),
   getByCategoryId: protectedProcedure
     .input(z.object({ categoryId: z.string() }))
     .query(async ({ ctx, input }) => {

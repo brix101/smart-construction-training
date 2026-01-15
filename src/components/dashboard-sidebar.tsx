@@ -12,7 +12,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { dashboardConfig } from '@/config/site'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { dashboardConfig } from '@/lib/config'
 
 export function DashboardSideBar() {
   return (
@@ -20,20 +25,27 @@ export function DashboardSideBar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              asChild
-            >
-              <Link to="/">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <ArrowLeft />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Go to App</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  asChild
+                >
+                  <Link to="/">
+                    <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                      <ArrowLeft />
+                    </div>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-medium">Go to App</span>
+                    </div>
+                  </Link>
+                </SidebarMenuButton>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Go to Application</p>
+              </TooltipContent>
+            </Tooltip>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

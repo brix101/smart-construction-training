@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 
 import type { MainNavItem } from '@/types'
 import { Icons } from '@/components/icons'
-import { siteConfig } from '@/config/site'
+import { siteConfig } from '@/lib/config'
 
 interface MainNavProps {
   items?: MainNavItem[]
