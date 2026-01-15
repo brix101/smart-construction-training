@@ -28,7 +28,7 @@ export const categoryRouter = {
 
       return list
     } catch (error) {
-      console.error(error)
+      console.error('[categoryRouter.list]', error)
       return []
     }
   }),
@@ -55,10 +55,8 @@ export const categoryRouter = {
     }),
   transaction: protectedProcedure
     .input(searchParamsSchema)
-    .query(async ({ ctx, input: { page, per_page, q, sort } }) => {
-      const fallbackPage = isNaN(page) || page < 1 ? 1 : page
-      const limit = isNaN(per_page) ? 10 : per_page
-      const offset = fallbackPage > 0 ? (fallbackPage - 1) * limit : 0
+    .query(async ({ ctx, input: { page, limit, query, sort } }) => {
+      const offset = page > 0 ? (page - 1) * limit : 0
 
       // Column and order to sort by
       const [column, order] = (sort?.split('.') as [
@@ -70,12 +68,12 @@ export const categoryRouter = {
         const transaction = await ctx.db.transaction(async (tx) => {
           const filter = [eq(categories.isActive, true)]
 
-          if (q) {
+          if (query) {
             filter.push(
               sql`(
                 setweight(to_tsvector('english', ${categories.name}), 'A') ||
                 setweight(to_tsvector('english', ${categories.description}), 'B'))
-                @@ to_tsquery('english', ${q}
+                @@ to_tsquery('english', ${query}
               )`,
             )
           }

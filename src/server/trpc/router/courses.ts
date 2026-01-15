@@ -9,10 +9,8 @@ import { protectedProcedure } from '@/server/trpc/trpc'
 export const coursesRouter = {
   list: protectedProcedure
     .input(searchParamsSchema)
-    .query(async ({ ctx, input: { page, per_page, q, sort } }) => {
-      const fallbackPage = isNaN(page) || page < 1 ? 1 : page
-      const limit = isNaN(per_page) ? 10 : per_page
-      const offset = fallbackPage > 0 ? (fallbackPage - 1) * limit : 0
+    .query(async ({ ctx, input: { page, limit, query, sort } }) => {
+      const offset = page > 0 ? (page - 1) * limit : 0
 
       // Column and order to sort by
       const [column, order] = (sort?.split('.') as [
@@ -23,12 +21,12 @@ export const coursesRouter = {
       try {
         const filter = [eq(courses.isActive, true)]
 
-        if (q) {
+        if (query) {
           filter.push(
             sql`(
                 setweight(to_tsvector('english', ${courses.name}), 'A') ||
                 setweight(to_tsvector('english', ${courses.description}), 'B'))
-                @@ to_tsquery('english', ${q}
+                @@ to_tsquery('english', ${query}
               )`,
           )
         }
@@ -51,7 +49,7 @@ export const coursesRouter = {
 
         return list
       } catch (error) {
-        console.error(error)
+        console.error('[coursesRouter.list]', error)
         return []
       }
     }),
@@ -77,7 +75,7 @@ export const coursesRouter = {
           .orderBy(asc(courses.name))
           .where(eq(courseCategories.categoryId, input.categoryId))
       } catch (err) {
-        console.error(err)
+        console.error('[coursesRouter.getByCategoryId]', err)
         return []
       }
     }),

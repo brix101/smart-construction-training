@@ -40,11 +40,12 @@ export const createContext = async (opts: FetchCreateContextFnOptions) => {
 
     return {
       session: { user },
+      clerkClient,
       db,
     }
   } catch (error) {
     console.error('[createContext]', error)
-    return { session: null, db: db }
+    return { session: null, db, clerkClient }
   }
 }
 
