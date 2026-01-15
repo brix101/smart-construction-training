@@ -2,48 +2,42 @@ import { TRPCRouterRecord } from '@trpc/server'
 import { and, asc, desc, eq, sql } from 'drizzle-orm'
 import z from 'zod'
 
+import type { Course } from '@/server/db/schema'
 import { searchParamsSchema } from '@/schema/search'
-import { Course, courseCategories, courses, topics } from '@/server/db/schema'
+import { courseCategories, courses, topics } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const coursesRouter = {
   list: protectedProcedure
     .input(searchParamsSchema)
-    .query(async ({ ctx, input: { page, limit, query, sort } }) => {
+    .query(async ({ ctx, input: { page, perPage: limit, query, sort } }) => {
       const offset = page > 0 ? (page - 1) * limit : 0
 
-      // Column and order to sort by
-      const [column, order] = (sort?.split('.') as [
-        keyof Course | undefined,
-        'asc' | 'desc' | undefined,
-      ]) ?? ['createdAt', 'desc']
-
       try {
-        const filter = [eq(courses.isActive, true)]
+        const where = and(
+          eq(courses.isActive, true),
+          query
+            ? sql`(
+                  setweight(to_tsvector('english', ${courses.name}), 'A') ||
+                  setweight(to_tsvector('english', ${courses.description}), 'B'))
+                  @@ to_tsquery('english', ${query}
+                )`
+            : undefined,
+        )
 
-        if (query) {
-          filter.push(
-            sql`(
-                setweight(to_tsvector('english', ${courses.name}), 'A') ||
-                setweight(to_tsvector('english', ${courses.description}), 'B'))
-                @@ to_tsquery('english', ${query}
-              )`,
-          )
-        }
-
-        const whereFilter = and(...filter)
+        const orderBy =
+          sort.length > 0
+            ? sort.map((item) => {
+                const column = courses[item.id as keyof Course]
+                return item.desc ? desc(column) : asc(column)
+              })
+            : [asc(courses.createdAt)]
 
         const list = await ctx.db
           .select()
           .from(courses)
-          .where(whereFilter)
-          .orderBy(
-            column && column in courses
-              ? order === 'asc'
-                ? asc(courses[column])
-                : desc(courses[column])
-              : asc(courses.name),
-          )
+          .where(where)
+          .orderBy(...orderBy)
           .limit(limit)
           .offset(offset)
 

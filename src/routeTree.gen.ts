@@ -15,7 +15,6 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as DemoTrpcTodoRouteImport } from './routes/demo/trpc-todo'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
-import { Route as DemoTableRouteImport } from './routes/demo/table'
 import { Route as DemoDrizzleRouteImport } from './routes/demo/drizzle'
 import { Route as DemoClerkRouteImport } from './routes/demo/clerk'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
@@ -59,11 +58,6 @@ const DemoTrpcTodoRoute = DemoTrpcTodoRouteImport.update({
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoTableRoute = DemoTableRouteImport.update({
-  id: '/demo/table',
-  path: '/demo/table',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoDrizzleRoute = DemoDrizzleRouteImport.update({
@@ -159,7 +153,6 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
-  '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/': typeof AppIndexRoute
@@ -182,7 +175,6 @@ export interface FileRoutesByTo {
   '/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
-  '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/': typeof AppIndexRoute
@@ -209,7 +201,6 @@ export interface FileRoutesById {
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
-  '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/demo/trpc-todo': typeof DemoTrpcTodoRoute
   '/_app/': typeof AppIndexRoute
@@ -234,7 +225,6 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/demo/clerk'
     | '/demo/drizzle'
-    | '/demo/table'
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
     | '/'
@@ -257,7 +247,6 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/demo/clerk'
     | '/demo/drizzle'
-    | '/demo/table'
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
     | '/'
@@ -283,7 +272,6 @@ export interface FileRouteTypes {
     | '/_auth/sign-up'
     | '/demo/clerk'
     | '/demo/drizzle'
-    | '/demo/table'
     | '/demo/tanstack-query'
     | '/demo/trpc-todo'
     | '/_app/'
@@ -308,7 +296,6 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   DemoClerkRoute: typeof DemoClerkRoute
   DemoDrizzleRoute: typeof DemoDrizzleRoute
-  DemoTableRoute: typeof DemoTableRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
   DemoTrpcTodoRoute: typeof DemoTrpcTodoRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
@@ -364,13 +351,6 @@ declare module '@tanstack/react-router' {
       path: '/demo/tanstack-query'
       fullPath: '/demo/tanstack-query'
       preLoaderRoute: typeof DemoTanstackQueryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/table': {
-      id: '/demo/table'
-      path: '/demo/table'
-      fullPath: '/demo/table'
-      preLoaderRoute: typeof DemoTableRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/drizzle': {
@@ -539,7 +519,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   DemoClerkRoute: DemoClerkRoute,
   DemoDrizzleRoute: DemoDrizzleRoute,
-  DemoTableRoute: DemoTableRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
   DemoTrpcTodoRoute: DemoTrpcTodoRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,

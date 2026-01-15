@@ -17,7 +17,7 @@ function RouteComponent() {
   const search = Route.useSearch()
 
   const { data, isLoading } = useQuery(
-    trpc.courses.list.queryOptions({ ...search, limit: 1000 }),
+    trpc.courses.list.queryOptions({ ...search, perPage: 1000 }),
   )
 
   return (

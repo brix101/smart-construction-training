@@ -1,15 +1,16 @@
+'use client'
+
 import * as React from 'react'
 import { X } from 'lucide-react'
 
 import type { Column, Table } from '@tanstack/react-table'
+import { DataTableDateFilter } from '@/components/data-table/data-table-date-filter'
+import { DataTableFacetedFilter } from '@/components/data-table/data-table-faceted-filter'
+import { DataTableSliderFilter } from '@/components/data-table/data-table-slider-filter'
+import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-
-import { DataTableDateFilter } from './date-filter'
-import { DataTableFacetedFilter } from './faceted-filter'
-import { DataTableSliderFilter } from './slider-filter'
-import { DataTableViewOptions } from './view-options'
 
 interface DataTableToolbarProps<TData> extends React.ComponentProps<'div'> {
   table: Table<TData>
@@ -61,7 +62,7 @@ export function DataTableToolbar<TData>({
       </div>
       <div className="flex items-center gap-2">
         {children}
-        <DataTableViewOptions table={table} />
+        <DataTableViewOptions table={table} align="end" />
       </div>
     </div>
   )
@@ -99,7 +100,7 @@ function DataTableToolbarFilter<TData>({
                 placeholder={columnMeta.placeholder ?? columnMeta.label}
                 value={(column.getFilterValue() as string) ?? ''}
                 onChange={(event) => column.setFilterValue(event.target.value)}
-                className={cn('h-8 w-[120px]', columnMeta.unit && 'pr-8')}
+                className={cn('h-8 w-30', columnMeta.unit && 'pr-8')}
               />
               {columnMeta.unit && (
                 <span className="bg-accent text-muted-foreground absolute top-0 right-0 bottom-0 flex items-center rounded-r-md px-2 text-sm">
@@ -107,6 +108,14 @@ function DataTableToolbarFilter<TData>({
                 </span>
               )}
             </div>
+          )
+
+        case 'range':
+          return (
+            <DataTableSliderFilter
+              column={column}
+              title={columnMeta.label ?? column.id}
+            />
           )
 
         case 'date':

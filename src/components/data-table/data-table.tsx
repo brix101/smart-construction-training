@@ -2,7 +2,7 @@ import type * as React from 'react'
 import { flexRender } from '@tanstack/react-table'
 
 import type { Table as TanstackTable } from '@tanstack/react-table'
-// import { DataTablePagination } from "@/components/data-table/data-table-pagination"
+import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { getCommonPinningStyles } from '@/lib/data-table'
+import { getColumnPinningStyle } from '@/lib/data-table'
 import { cn } from '@/lib/utils'
 
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
@@ -32,9 +32,9 @@ export function DataTable<TData>({
       {...props}
     >
       {children}
-      <div className="overflow-hidden rounded-lg border">
+      <div className="overflow-hidden rounded-md border">
         <Table>
-          <TableHeader className="bg-muted z-50">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -42,8 +42,7 @@ export function DataTable<TData>({
                     key={header.id}
                     colSpan={header.colSpan}
                     style={{
-                      ...getCommonPinningStyles({ column: header.column }),
-                      background: 'var(--muted)',
+                      ...getColumnPinningStyle({ column: header.column }),
                     }}
                   >
                     {header.isPlaceholder
@@ -68,7 +67,7 @@ export function DataTable<TData>({
                     <TableCell
                       key={cell.id}
                       style={{
-                        ...getCommonPinningStyles({ column: cell.column }),
+                        ...getColumnPinningStyle({ column: cell.column }),
                       }}
                     >
                       {flexRender(
@@ -93,7 +92,7 @@ export function DataTable<TData>({
         </Table>
       </div>
       <div className="flex flex-col gap-2.5">
-        {/* <DataTablePagination table={table} /> */}
+        <DataTablePagination table={table} />
         {actionBar &&
           table.getFilteredSelectedRowModel().rows.length > 0 &&
           actionBar}

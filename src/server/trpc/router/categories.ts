@@ -55,30 +55,31 @@ export const categoryRouter = {
     }),
   transaction: protectedProcedure
     .input(searchParamsSchema)
-    .query(async ({ ctx, input: { page, limit, query, sort } }) => {
+    .query(async ({ ctx, input: { page, perPage: limit, query, sort } }) => {
       const offset = page > 0 ? (page - 1) * limit : 0
-
-      // Column and order to sort by
-      const [column, order] = (sort?.split('.') as [
-        keyof Category | undefined,
-        'asc' | 'desc' | undefined,
-      ]) ?? ['createdAt', 'desc']
 
       try {
         const transaction = await ctx.db.transaction(async (tx) => {
-          const filter = [eq(categories.isActive, true)]
+          const whereFilter = and(
+            eq(categories.isActive, true),
+            query
+              ? sql`(
+                    setweight(to_tsvector('english', ${categories.name}), 'A') ||
+                    setweight(to_tsvector('english', ${categories.description}), 'B'))
+                    @@ to_tsquery('english', ${query}
+                  )`
+              : undefined,
+          )
 
-          if (query) {
-            filter.push(
-              sql`(
-                setweight(to_tsvector('english', ${categories.name}), 'A') ||
-                setweight(to_tsvector('english', ${categories.description}), 'B'))
-                @@ to_tsquery('english', ${query}
-              )`,
-            )
-          }
+          const orderBy =
+            sort.length > 0
+              ? sort.map((item) => {
+                  const column = categories[item.id as keyof Category]
 
-          const whereFilter = and(...filter)
+                  console.log({ item })
+                  return item.desc ? desc(column) : asc(column)
+                })
+              : [asc(categories.name)]
 
           const items = await tx
             .select({
@@ -97,13 +98,7 @@ export const categoryRouter = {
             .limit(limit)
             .offset(offset)
             .where(whereFilter)
-            .orderBy(
-              column && column in categories
-                ? order === 'asc'
-                  ? asc(categories[column])
-                  : desc(categories[column])
-                : desc(categories.createdAt),
-            )
+            .orderBy(...orderBy)
 
           const count = await tx
             .select({
