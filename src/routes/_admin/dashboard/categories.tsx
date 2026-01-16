@@ -1,3 +1,4 @@
+import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { createStandardSchemaV1 } from 'nuqs'
@@ -6,9 +7,12 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import CategoriesActionBar from '@/features/categories/components/categories-action-bar'
-import { categoriesTableColumns } from '@/features/categories/components/categories-table-columns'
+import CategoriesDeleteDialog from '@/features/categories/components/categories-delete-dialog'
+import { getCategoriesTableColumns } from '@/features/categories/components/categories-table-columns'
 import { useDataTable } from '@/hooks/use-data-table'
 import { categoriesSearchParams } from '@/schema/search'
+import { CategoryData } from '@/types/data'
+import { DataTableRowAction } from '@/types/data-table'
 
 export const Route = createFileRoute('/_admin/dashboard/categories')({
   validateSearch: createStandardSchemaV1(categoriesSearchParams, {
@@ -21,6 +25,9 @@ function RouteComponent() {
   const { trpc } = Route.useRouteContext()
   const search = Route.useSearch()
 
+  const [rowAction, setRowAction] =
+    React.useState<DataTableRowAction<CategoryData> | null>(null)
+
   const { data, isLoading } = useQuery(
     trpc.categories.transaction.queryOptions({
       ...search,
@@ -28,9 +35,17 @@ function RouteComponent() {
     }),
   )
 
+  const columns = React.useMemo(
+    () =>
+      getCategoriesTableColumns({
+        setRowAction,
+      }),
+    [],
+  )
+
   const { table } = useDataTable({
     data: data?.items || [],
-    columns: categoriesTableColumns,
+    columns: columns,
     pageCount: data?.pageCount || 1,
     initialState: {
       sorting: search.sort ?? [{ id: 'name', desc: false }],
@@ -43,7 +58,7 @@ function RouteComponent() {
     return (
       <div className="mt-4">
         <DataTableSkeleton
-          columnCount={categoriesTableColumns.length}
+          columnCount={columns.length}
           filterCount={1}
           shrinkZero
         />
@@ -59,6 +74,13 @@ function RouteComponent() {
       >
         <DataTableToolbar table={table}></DataTableToolbar>
       </DataTable>
+      <CategoriesDeleteDialog
+        open={rowAction?.variant === 'delete'}
+        onOpenChange={() => setRowAction(null)}
+        items={rowAction?.row.original ? [rowAction?.row.original] : []}
+        showTrigger={false}
+        onSuccess={() => rowAction?.row.toggleSelected(false)}
+      />
     </div>
   )
 }

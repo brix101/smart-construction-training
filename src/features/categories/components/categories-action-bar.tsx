@@ -1,7 +1,7 @@
 import React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearch } from '@tanstack/react-router'
-import { Trash2, X } from 'lucide-react'
+import { SquarePen, Trash2, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import type { Table } from '@tanstack/react-table'
@@ -13,6 +13,16 @@ import {
   ActionBarSelection,
   ActionBarSeparator,
 } from '@/components/ui/action-bar'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useTRPC } from '@/integrations/trpc/react'
 import { CategoryData } from '@/types/data'
 
@@ -27,6 +37,8 @@ function CategoriesActionBar({ table }: ActionBarProps) {
   const queryClient = useQueryClient()
 
   const searchParams = useSearch({ from: '/_admin/dashboard/categories' })
+
+  const [isDelete, setIsDelete] = React.useState(false)
 
   const categoriesKey = trpc.categories.transaction.queryKey(searchParams)
   const deleteMutation = useMutation(trpc.categories.delete.mutationOptions())
@@ -58,23 +70,29 @@ function CategoriesActionBar({ table }: ActionBarProps) {
   }, [rows, table])
 
   return (
-    <ActionBar open={rows.length > 0} onOpenChange={onOpenChange}>
-      <ActionBarSelection>
-        <span className="font-medium">{rows.length}</span>
-        <span>selected</span>
+    <>
+      <ActionBar open={rows.length > 0} onOpenChange={onOpenChange}>
+        <ActionBarSelection>
+          <span className="font-medium">{rows.length}</span>
+          <span>selected</span>
+          <ActionBarSeparator />
+          <ActionBarClose>
+            <X />
+          </ActionBarClose>
+        </ActionBarSelection>
         <ActionBarSeparator />
-        <ActionBarClose>
-          <X />
-        </ActionBarClose>
-      </ActionBarSelection>
-      <ActionBarSeparator />
-      <ActionBarGroup>
-        <ActionBarItem variant="destructive" onClick={onDelete}>
-          <Trash2 />
-          Delete
-        </ActionBarItem>
-      </ActionBarGroup>
-    </ActionBar>
+        <ActionBarGroup>
+          <ActionBarItem onClick={onDelete} disabled={rows.length > 1}>
+            <SquarePen />
+            Edit
+          </ActionBarItem>
+          <ActionBarItem variant="destructive" onClick={onDelete}>
+            <Trash2 />
+            Delete
+          </ActionBarItem>
+        </ActionBarGroup>
+      </ActionBar>
+    </>
   )
 }
 

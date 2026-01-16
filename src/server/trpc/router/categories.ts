@@ -82,7 +82,6 @@ export const categoryRouter = {
               ? sort.map((item) => {
                   const column = categories[item.id as keyof Category]
 
-                  console.log({ item })
                   return item.desc ? desc(column) : asc(column)
                 })
               : [asc(categories.name)]

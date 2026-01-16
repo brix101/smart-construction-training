@@ -121,7 +121,7 @@ export const usersTableColumns: ColumnDef<User>[] = [
               variant="ghost"
               className="data-[state=open]:bg-muted flex size-8 p-0"
             >
-              <Ellipsis className="size-4" aria-hidden="true" />
+              <Ellipsis className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-40">

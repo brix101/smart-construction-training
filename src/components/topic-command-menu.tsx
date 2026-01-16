@@ -63,7 +63,7 @@ export function TopicCommandMenu() {
         className="relative w-9 p-0 xl:w-60 xl:justify-start xl:px-3 xl:py-2"
         onClick={() => setOpen(true)}
       >
-        <SearchIcon className="size-4 xl:mr-2" aria-hidden="true" />
+        <SearchIcon className="size-4 xl:mr-2" />
         <span className="hidden xl:inline-flex">Start typing...</span>
         <span className="sr-only">Start typing</span>
         <KbdGroup
@@ -115,10 +115,7 @@ export function TopicCommandMenu() {
                       value={item.name}
                       onSelect={() => console.log('Selected topic:', item.id)}
                     >
-                      <CircleIcon
-                        className="text-muted-foreground mr-2.5 size-3"
-                        aria-hidden="true"
-                      />
+                      <CircleIcon className="text-muted-foreground mr-2.5 size-3" />
                       <span className="truncate">{item.name}</span>
                     </CommandItem>
                   )

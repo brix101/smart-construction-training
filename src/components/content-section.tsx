@@ -44,7 +44,7 @@ export function ContentSection({
           <Button variant="outline" className="hidden sm:flex" asChild>
             <Link to={href}>
               {linkText}
-              <ArrowRightIcon className="ml-2 size-4" aria-hidden="true" />
+              <ArrowRightIcon className="ml-2 size-4" />
               <span className="sr-only"> {linkText}</span>
             </Link>
           </Button>
@@ -67,7 +67,7 @@ export function ContentSection({
           >
             <Link to={href}>
               {linkText}
-              <ArrowRightIcon className="ml-2 size-4" aria-hidden="true" />
+              <ArrowRightIcon className="ml-2 size-4" />
               <span className="sr-only"> {linkText}</span>
             </Link>
           </Button>
