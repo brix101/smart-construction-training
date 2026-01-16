@@ -1,5 +1,5 @@
-import { TRPCRouterRecord } from '@trpc/server'
-import { and, asc, countDistinct, desc, eq, sql } from 'drizzle-orm'
+import { TRPCError, TRPCRouterRecord } from '@trpc/server'
+import { and, asc, countDistinct, desc, eq, inArray, sql } from 'drizzle-orm'
 import z from 'zod'
 
 import { searchParamsSchema } from '@/schema/search'
@@ -28,8 +28,11 @@ export const categoryRouter = {
 
       return list
     } catch (error) {
-      console.error('[categoryRouter.list]', error)
-      return []
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch categories',
+        cause: error,
+      })
     }
   }),
   getById: protectedProcedure
@@ -49,8 +52,11 @@ export const categoryRouter = {
 
         return item ? item : null
       } catch (error) {
-        console.error('[categoryRouter.getById]', error)
-        return null
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch category by ID',
+          cause: error,
+        })
       }
     }),
   transaction: protectedProcedure
@@ -117,12 +123,44 @@ export const categoryRouter = {
 
         return transaction
       } catch (error) {
-        console.error('[categoryRouter.transaction]', error)
-        return {
-          items: [],
-          count: 0,
-          pageCount: 0,
-        }
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Something went wrong while fetching categories',
+          cause: error,
+        })
+      }
+    }),
+  delete: protectedProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const role = ctx.session.user.publicMetadata?.role
+
+      if (role !== 'admin') {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: "You don't have permission to delete categories",
+        })
+      }
+
+      try {
+        // await ctx.db.delete(categories).where(inArray(categories.id, input.ids))
+
+        await ctx.db
+          .update(categories)
+          .set({ isActive: false })
+          .where(inArray(categories.id, input.ids))
+
+        return { message: 'Categories deleted successfully' }
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Something went wrong while deleting categories',
+          cause: error,
+        })
       }
     }),
 } satisfies TRPCRouterRecord

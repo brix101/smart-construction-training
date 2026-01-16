@@ -57,7 +57,7 @@ export const categoriesTableColumns: ColumnDef<CategoryData>[] = [
               <img
                 src={imgSrc}
                 alt={name}
-                className="object-center"
+                className="h-full w-full object-cover"
                 sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
                 loading="lazy"
               />

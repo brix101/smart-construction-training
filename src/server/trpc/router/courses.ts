@@ -1,4 +1,4 @@
-import { TRPCRouterRecord } from '@trpc/server'
+import { TRPCError, TRPCRouterRecord } from '@trpc/server'
 import { and, asc, desc, eq, sql } from 'drizzle-orm'
 import z from 'zod'
 
@@ -43,8 +43,11 @@ export const coursesRouter = {
 
         return list
       } catch (error) {
-        console.error('[coursesRouter.list]', error)
-        return []
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch courses',
+          cause: error,
+        })
       }
     }),
   getByCategoryId: protectedProcedure
@@ -69,8 +72,11 @@ export const coursesRouter = {
           .orderBy(asc(courses.name))
           .where(eq(courseCategories.categoryId, input.categoryId))
       } catch (err) {
-        console.error('[coursesRouter.getByCategoryId]', err)
-        return []
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch courses by category ID',
+          cause: err,
+        })
       }
     }),
   getById: protectedProcedure
@@ -93,8 +99,11 @@ export const coursesRouter = {
 
         return item ? item : null
       } catch (error) {
-        console.error('[coursesRouter.getById]', error)
-        return null
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch course by ID',
+          cause: error,
+        })
       }
     }),
 } satisfies TRPCRouterRecord

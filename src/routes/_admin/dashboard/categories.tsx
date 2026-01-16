@@ -5,6 +5,7 @@ import { createStandardSchemaV1 } from 'nuqs'
 import { DataTable } from '@/components/data-table/data-table'
 import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
+import CategoriesActionBar from '@/features/categories/components/categories-action-bar'
 import { categoriesTableColumns } from '@/features/categories/components/categories-table-columns'
 import { useDataTable } from '@/hooks/use-data-table'
 import { categoriesSearchParams } from '@/schema/search'
@@ -52,7 +53,10 @@ function RouteComponent() {
 
   return (
     <div className="mt-4">
-      <DataTable table={table}>
+      <DataTable
+        table={table}
+        actionBar={<CategoriesActionBar table={table} />}
+      >
         <DataTableToolbar table={table}></DataTableToolbar>
       </DataTable>
     </div>

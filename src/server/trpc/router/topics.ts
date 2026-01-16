@@ -84,11 +84,11 @@ export const topicsRouter = {
         }, {} as GroupedTopics)
 
         return Object.values(groupedByCourse)
-      } catch (err) {
-        console.error('[topicsRouter.getTopics]:', err)
+      } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch topics',
+          cause: error,
         })
       }
     }),

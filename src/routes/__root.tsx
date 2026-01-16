@@ -12,6 +12,7 @@ import type { AppRouter } from '@/server/trpc/router/_app'
 import type { QueryClient } from '@tanstack/react-query'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Toaster } from '@/components/ui/sonner'
 import ClerkProvider from '@/integrations/clerk/provider'
 
 import appCss from '../styles.css?url'
@@ -72,6 +73,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 ]}
               />
             </ClerkProvider>
+            <Toaster />
           </NuqsAdapter>
           <Scripts />
         </body>
