@@ -8,7 +8,7 @@ import * as z from 'zod'
 
 import { User } from '@/features/users/types'
 import { getSortingStateParser, sortingItemSchema } from '@/lib/parsers'
-import { CategoryData } from '@/types/data'
+import { RouterOutput } from '@/server/trpc/router/_app'
 
 export const searchParamsSchema = z.object({
   page: z.number().default(1),
@@ -28,13 +28,20 @@ export const searchParams = {
 export const usersSearchParams = {
   ...searchParams,
   sort: getSortingStateParser<User>().withDefault([
-    { id: 'createdAt', desc: true },
+    { id: 'lastSignInAt', desc: true },
   ]),
 }
 
 export const categoriesSearchParams = {
   ...searchParams,
-  sort: getSortingStateParser<CategoryData>().withDefault([
-    { id: 'name', desc: false },
-  ]),
+  sort: getSortingStateParser<
+    RouterOutput['categories']['list']['items'][0]
+  >().withDefault([{ id: 'name', desc: false }]),
+}
+
+export const coursesSearchParams = {
+  ...searchParams,
+  sort: getSortingStateParser<
+    RouterOutput['courses']['list']['items'][0]
+  >().withDefault([{ id: 'createdAt', desc: true }]),
 }

@@ -32,6 +32,15 @@ function CategoriesActionBar({ table }: ActionBarProps) {
     [table],
   )
 
+  const onEdit = React.useCallback(() => {
+    const row = rows[0]
+    if (!row) return
+    setRowAction({
+      variant: 'update',
+      rows: [row],
+    })
+  }, [rows, table])
+
   const onDelete = React.useCallback(() => {
     setRowAction({
       variant: 'delete',
@@ -52,7 +61,7 @@ function CategoriesActionBar({ table }: ActionBarProps) {
         </ActionBarSelection>
         <ActionBarSeparator />
         <ActionBarGroup>
-          <ActionBarItem disabled={rows.length > 1}>
+          <ActionBarItem disabled={rows.length > 1} onClick={onEdit}>
             <SquarePen />
             Edit
           </ActionBarItem>

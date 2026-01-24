@@ -24,15 +24,15 @@ export const siteConfig = {
 export const dashboardConfig: DashboardConfig = {
   navItems: [
     {
-      title: 'Courses',
-      href: '/dashboard/courses',
-      icon: 'courses',
-      items: [],
-    },
-    {
       title: 'Categories',
       href: '/dashboard/categories',
       icon: 'categories',
+      items: [],
+    },
+    {
+      title: 'Courses',
+      href: '/dashboard/courses',
+      icon: 'courses',
       items: [],
     },
     {

@@ -122,7 +122,7 @@ export const categoryRouter = {
 
           const count = await tx
             .select({
-              count: sql<number>`count(${categories.id})`,
+              count: countDistinct(categories.id),
             })
             .from(categories)
             .where(whereFilter)
@@ -201,7 +201,7 @@ export const categoryRouter = {
           throw new TRPCError({
             code: 'CONFLICT',
             message: 'A category with this name already exists.',
-            cause: error,
+            cause: error.cause?.message,
           })
         }
 

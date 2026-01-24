@@ -1,5 +1,5 @@
 import { TRPCError, TRPCRouterRecord } from '@trpc/server'
-import { and, asc, desc, eq, sql } from 'drizzle-orm'
+import { and, asc, countDistinct, desc, eq, sql } from 'drizzle-orm'
 import z from 'zod'
 
 import type { Course } from '@/server/db/schema'
@@ -8,7 +8,7 @@ import { courseCategories, courses, topics } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const coursesRouter = {
-  list: protectedProcedure
+  getAll: protectedProcedure
     .input(searchParamsSchema)
     .query(async ({ ctx, input: { page, perPage: limit, query, sort } }) => {
       const offset = page > 0 ? (page - 1) * limit : 0
@@ -102,6 +102,73 @@ export const coursesRouter = {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch course by ID',
+          cause: error,
+        })
+      }
+    }),
+  list: protectedProcedure
+    .input(searchParamsSchema)
+    .query(async ({ ctx, input }) => {
+      const { page, perPage: limit, query, sort } = input
+      const offset = page > 0 ? (page - 1) * limit : 0
+
+      try {
+        const list = await ctx.db.transaction(async (tx) => {
+          const where = and(
+            eq(courses.isActive, true),
+            query
+              ? sql`(
+                  setweight(to_tsvector('english', ${courses.name}), 'A') ||
+                  setweight(to_tsvector('english', ${courses.description}), 'B'))
+                  @@ to_tsquery('english', ${query}
+                )`
+              : undefined,
+          )
+
+          const orderBy =
+            sort.length > 0
+              ? sort.map((item) => {
+                  const column = courses[item.id as keyof Course]
+                  return item.desc ? desc(column) : asc(column)
+                })
+              : [asc(courses.createdAt)]
+
+          const items = await tx
+            .select({
+              id: courses.id,
+              name: courses.name,
+              description: courses.description,
+              createdAt: courses.createdAt,
+              topicCount: countDistinct(topics.id),
+            })
+            .from(courses)
+            .leftJoin(topics, eq(topics.courseId, courses.id))
+            .groupBy(courses.id)
+            .where(where)
+            .orderBy(...orderBy)
+            .limit(limit)
+            .offset(offset)
+
+          const count = await tx
+            .select({
+              count: countDistinct(courses.id),
+            })
+            .from(courses)
+            .where(where)
+            .then((res) => res[0]?.count ?? 0)
+
+          return {
+            items,
+            count,
+            pageCount: Math.ceil(count / limit),
+          }
+        })
+
+        return list
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch courses',
           cause: error,
         })
       }

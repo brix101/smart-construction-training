@@ -27,7 +27,8 @@ function RouteComponent() {
     columns: usersTableColumns,
     pageCount: data?.pageCount || 1,
     initialState: {
-      sorting: search.sort ?? [{ id: 'lastSignInAt', desc: true }],
+      sorting: search.sort,
+      columnPinning: { right: ['actions'] },
     },
     getRowId: (originalRow) => originalRow.id,
     clearOnDefault: true,

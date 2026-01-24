@@ -27,10 +27,7 @@ function RouteComponent() {
   const search = Route.useSearch()
 
   const { data, isLoading } = useQuery(
-    trpc.categories.list.queryOptions({
-      ...search,
-      sort: search.sort ?? [{ id: 'name', desc: false }],
-    }),
+    trpc.categories.list.queryOptions(search),
   )
 
   const columns = React.useMemo(() => getCategoriesTableColumns({}), [])
@@ -40,7 +37,7 @@ function RouteComponent() {
     columns: columns,
     pageCount: data?.pageCount || 1,
     initialState: {
-      sorting: search.sort ?? [{ id: 'name', desc: false }],
+      sorting: search.sort,
       columnPinning: { right: ['actions'] },
     },
     getRowId: (originalRow) => originalRow.id,

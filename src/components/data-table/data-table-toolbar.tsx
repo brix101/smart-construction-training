@@ -120,7 +120,6 @@ function DataTableToolbarFilter<TData>({
 
         case 'date':
         case 'dateRange':
-          console.log('rendering date filter')
           return (
             <DataTableDateFilter
               column={column}
