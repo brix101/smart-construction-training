@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_app/')({
 function App() {
   const { trpc } = Route.useRouteContext()
 
-  const { data, isLoading } = useQuery(trpc.categories.list.queryOptions())
+  const { data, isLoading } = useQuery(trpc.categories.getAll.queryOptions())
 
   return (
     <Shell>

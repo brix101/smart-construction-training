@@ -15,10 +15,11 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as ApiUploadthingSplatRouteImport } from './routes/api/uploadthing.$'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
-import { Route as AdminDashboardUsersRouteImport } from './routes/_admin/dashboard/users'
-import { Route as AdminDashboardCoursesRouteImport } from './routes/_admin/dashboard/courses'
-import { Route as AdminDashboardCategoriesRouteImport } from './routes/_admin/dashboard/categories'
+import { Route as AdminDashboardUsersRouteImport } from './routes/_admin/dashboard.users'
+import { Route as AdminDashboardCoursesRouteImport } from './routes/_admin/dashboard.courses'
+import { Route as AdminDashboardCategoriesRouteImport } from './routes/_admin/dashboard.categories'
 import { Route as AppCIdChar123SlugChar125RouteImport } from './routes/_app/c.$id.{-$slug}'
 
 const AuthRoute = AuthRouteImport.update({
@@ -47,6 +48,11 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => AuthRoute,
+} as any)
+const ApiUploadthingSplatRoute = ApiUploadthingSplatRouteImport.update({
+  id: '/api/uploadthing/$',
+  path: '/api/uploadthing/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   id: '/api/trpc/$',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/courses': typeof AdminDashboardCoursesRoute
   '/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
   '/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
 }
 export interface FileRoutesByTo {
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/dashboard/courses': typeof AdminDashboardCoursesRoute
   '/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
   '/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
 }
 export interface FileRoutesById {
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/_admin/dashboard/courses': typeof AdminDashboardCoursesRoute
   '/_admin/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
   '/_app/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/dashboard/courses'
     | '/dashboard/users'
     | '/api/trpc/$'
+    | '/api/uploadthing/$'
     | '/c/$id/{-$slug}'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/dashboard/courses'
     | '/dashboard/users'
     | '/api/trpc/$'
+    | '/api/uploadthing/$'
     | '/c/$id/{-$slug}'
   id:
     | '__root__'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/_admin/dashboard/courses'
     | '/_admin/dashboard/users'
     | '/api/trpc/$'
+    | '/api/uploadthing/$'
     | '/_app/c/$id/{-$slug}'
   fileRoutesById: FileRoutesById
 }
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
+  ApiUploadthingSplatRoute: typeof ApiUploadthingSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -196,6 +209,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sign-in'
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/api/uploadthing/$': {
+      id: '/api/uploadthing/$'
+      path: '/api/uploadthing/$'
+      fullPath: '/api/uploadthing/$'
+      preLoaderRoute: typeof ApiUploadthingSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/trpc/$': {
       id: '/api/trpc/$'
@@ -278,6 +298,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
+  ApiUploadthingSplatRoute: ApiUploadthingSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

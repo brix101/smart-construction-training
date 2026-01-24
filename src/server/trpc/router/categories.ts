@@ -1,13 +1,25 @@
 import { TRPCError, TRPCRouterRecord } from '@trpc/server'
-import { and, asc, countDistinct, desc, eq, inArray, sql } from 'drizzle-orm'
+import {
+  and,
+  asc,
+  countDistinct,
+  desc,
+  DrizzleQueryError,
+  eq,
+  gte,
+  inArray,
+  sql,
+} from 'drizzle-orm'
 import z from 'zod'
 
+import { pluralize } from '@/lib/pluralize'
+import { categoryCreateSchema, categoryUpdateSchema } from '@/schema/category'
 import { searchParamsSchema } from '@/schema/search'
 import { categories, Category, courseCategories } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const categoryRouter = {
-  list: protectedProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     try {
       const list = await ctx.db
         .select({
@@ -15,6 +27,7 @@ export const categoryRouter = {
           name: categories.name,
           imgSrc: categories.imgSrc,
           description: categories.description,
+          createdAt: categories.createdAt,
           courseCount: countDistinct(courseCategories.courseId),
         })
         .from(categories)
@@ -24,6 +37,7 @@ export const categoryRouter = {
         )
         .groupBy(categories.id, courseCategories.categoryId)
         .where(eq(categories.isActive, true))
+        .having(gte(countDistinct(courseCategories.courseId), 1))
         .orderBy(asc(categories.name))
 
       return list
@@ -59,13 +73,13 @@ export const categoryRouter = {
         })
       }
     }),
-  transaction: protectedProcedure
+  list: protectedProcedure
     .input(searchParamsSchema)
     .query(async ({ ctx, input: { page, perPage: limit, query, sort } }) => {
       const offset = page > 0 ? (page - 1) * limit : 0
 
       try {
-        const transaction = await ctx.db.transaction(async (tx) => {
+        const list = await ctx.db.transaction(async (tx) => {
           const whereFilter = and(
             eq(categories.isActive, true),
             query
@@ -92,6 +106,7 @@ export const categoryRouter = {
               name: categories.name,
               imgSrc: categories.imgSrc,
               description: categories.description,
+              createdAt: categories.createdAt,
               courseCount: countDistinct(courseCategories.courseId),
             })
             .from(categories)
@@ -120,12 +135,80 @@ export const categoryRouter = {
           }
         })
 
-        return transaction
+        return list
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Something went wrong while fetching categories',
           cause: error,
+        })
+      }
+    }),
+  create: protectedProcedure
+    .input(categoryCreateSchema)
+    .mutation(async ({ ctx, input }) => {
+      const role = ctx.session.user.publicMetadata?.role
+
+      if (role !== 'admin') {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: "You don't have permission to create categories",
+        })
+      }
+
+      try {
+        const newCategory = await ctx.db
+          .insert(categories)
+          .values(input)
+          .returning()
+
+        return newCategory[0]
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Something went wrong while creating category',
+          cause: error,
+        })
+      }
+    }),
+  update: protectedProcedure
+    .input(categoryUpdateSchema)
+    .mutation(async ({ ctx, input }) => {
+      const role = ctx.session.user.publicMetadata?.role
+
+      if (role !== 'admin') {
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: "You don't have permission to update categories",
+        })
+      }
+
+      try {
+        const { id, ...updateData } = input
+
+        const updatedCategory = await ctx.db
+          .update(categories)
+          .set(updateData)
+          .where(eq(categories.id, id))
+          .returning()
+
+        return updatedCategory[0]
+      } catch (error) {
+        if (
+          error instanceof DrizzleQueryError &&
+          (error.cause as any)?.code === '23505'
+        ) {
+          throw new TRPCError({
+            code: 'CONFLICT',
+            message: 'A category with this name already exists.',
+            cause: error,
+          })
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Something went wrong while updating category',
+          cause: error instanceof Error ? error.cause : error,
         })
       }
     }),
@@ -153,7 +236,10 @@ export const categoryRouter = {
           .set({ isActive: false })
           .where(inArray(categories.id, input.ids))
 
-        return { message: 'Categories deleted successfully' }
+        return {
+          ids: input.ids,
+          message: `${pluralize('Category', input.ids.length)} deleted successfully`,
+        }
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',

@@ -1,8 +1,5 @@
 import React from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useSearch } from '@tanstack/react-router'
 import { SquarePen, Trash2, X } from 'lucide-react'
-import { toast } from 'sonner'
 
 import type { Table } from '@tanstack/react-table'
 import {
@@ -13,18 +10,9 @@ import {
   ActionBarSelection,
   ActionBarSeparator,
 } from '@/components/ui/action-bar'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { useTRPC } from '@/integrations/trpc/react'
 import { CategoryData } from '@/types/data'
+
+import { useCategoryRowAction } from '../state'
 
 interface ActionBarProps {
   table: Table<CategoryData>
@@ -33,15 +21,7 @@ interface ActionBarProps {
 function CategoriesActionBar({ table }: ActionBarProps) {
   const rows = table.getFilteredSelectedRowModel().rows
 
-  const trpc = useTRPC()
-  const queryClient = useQueryClient()
-
-  const searchParams = useSearch({ from: '/_admin/dashboard/categories' })
-
-  const [isDelete, setIsDelete] = React.useState(false)
-
-  const categoriesKey = trpc.categories.transaction.queryKey(searchParams)
-  const deleteMutation = useMutation(trpc.categories.delete.mutationOptions())
+  const { setRowAction } = useCategoryRowAction()
 
   const onOpenChange = React.useCallback(
     (open: boolean) => {
@@ -53,19 +33,9 @@ function CategoriesActionBar({ table }: ActionBarProps) {
   )
 
   const onDelete = React.useCallback(() => {
-    const ids = rows.map((row) => row.original.id)
-
-    toast.promise(deleteMutation.mutateAsync({ ids }), {
-      loading: `Deleting ${ids.length} categories...`,
-      success: (response) => {
-        queryClient.invalidateQueries({
-          queryKey: categoriesKey,
-        })
-        return response?.message || 'Categories deleted successfully'
-      },
-      error: (error) => {
-        return error?.message || 'Something went wrong'
-      },
+    setRowAction({
+      variant: 'delete',
+      rows: rows,
     })
   }, [rows, table])
 
@@ -82,7 +52,7 @@ function CategoriesActionBar({ table }: ActionBarProps) {
         </ActionBarSelection>
         <ActionBarSeparator />
         <ActionBarGroup>
-          <ActionBarItem onClick={onDelete} disabled={rows.length > 1}>
+          <ActionBarItem disabled={rows.length > 1}>
             <SquarePen />
             Edit
           </ActionBarItem>

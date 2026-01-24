@@ -4,7 +4,7 @@ import { DownloadButton, UploadButton } from '@/components/material-button'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTRPC } from '@/integrations/trpc/react'
+import { useTRPC } from '@/lib/trpc'
 import { getYouTubeId } from '@/lib/youtube'
 import { Topic } from '@/server/db/schema'
 

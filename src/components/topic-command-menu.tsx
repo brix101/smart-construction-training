@@ -16,7 +16,7 @@ import { Kbd, KbdGroup } from '@/components/ui/kbd'
 import { SheetTitle } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useDebounce } from '@/hooks/use-debounce'
-import { useTRPC } from '@/integrations/trpc/react'
+import { useTRPC } from '@/lib/trpc'
 import { cn, isMacOs } from '@/lib/utils'
 
 export function TopicCommandMenu() {

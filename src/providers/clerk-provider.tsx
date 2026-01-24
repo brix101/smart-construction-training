@@ -1,3 +1,4 @@
+import React from 'react'
 import { ClerkProvider } from '@clerk/clerk-react'
 import { shadcn } from '@clerk/themes'
 
@@ -8,9 +9,7 @@ if (!PUBLISHABLE_KEY) {
 
 export default function AppClerkProvider({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: React.PropsWithChildren) {
   return (
     <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}

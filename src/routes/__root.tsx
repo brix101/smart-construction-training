@@ -13,7 +13,6 @@ import type { QueryClient } from '@tanstack/react-query'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
-import ClerkProvider from '@/integrations/clerk/provider'
 
 import appCss from '../styles.css?url'
 
@@ -55,24 +54,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </head>
         <body>
           <NuqsAdapter>
-            <ClerkProvider>
-              {children}
-              <TanStackDevtools
-                config={{
-                  position: 'bottom-right',
-                }}
-                plugins={[
-                  {
-                    name: 'Tanstack Router',
-                    render: <TanStackRouterDevtoolsPanel />,
-                  },
-                  {
-                    name: 'Tanstack Query',
-                    render: <ReactQueryDevtoolsPanel />,
-                  },
-                ]}
-              />
-            </ClerkProvider>
+            {children}
+            <TanStackDevtools
+              config={{
+                position: 'bottom-right',
+              }}
+              plugins={[
+                {
+                  name: 'Tanstack Router',
+                  render: <TanStackRouterDevtoolsPanel />,
+                },
+                {
+                  name: 'Tanstack Query',
+                  render: <ReactQueryDevtoolsPanel />,
+                },
+              ]}
+            />
             <Toaster />
           </NuqsAdapter>
           <Scripts />

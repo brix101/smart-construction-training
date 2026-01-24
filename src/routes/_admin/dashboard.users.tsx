@@ -35,22 +35,20 @@ function RouteComponent() {
 
   if (isLoading) {
     return (
-      <div className="mt-4">
-        <DataTableSkeleton
-          columnCount={usersTableColumns.length}
-          filterCount={1}
-          // cellWidths={['25rem', '15rem', '15rem', '5rem']}
-          shrinkZero
-        />
-      </div>
+      <DataTableSkeleton
+        columnCount={usersTableColumns.length}
+        filterCount={1}
+        // cellWidths={['25rem', '15rem', '15rem', '5rem']}
+        shrinkZero
+      />
     )
   }
 
   return (
-    <div className="mt-4">
+    <>
       <DataTable table={table}>
         <DataTableToolbar table={table}></DataTableToolbar>
       </DataTable>
-    </div>
+    </>
   )
 }

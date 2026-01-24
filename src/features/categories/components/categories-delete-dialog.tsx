@@ -1,7 +1,5 @@
-import React from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearch } from '@tanstack/react-router'
-import { Row } from '@tanstack/react-table'
 import { Loader, Trash } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -27,53 +25,72 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useMediaQuery } from '@/hooks/use-media-query'
-import { useTRPC } from '@/integrations/trpc/react'
-import { CategoryData } from '@/types/data'
+import { pluralize } from '@/lib/pluralize'
+import { useTRPC } from '@/lib/trpc'
 
-interface DeleteCategoriesDialogProps extends React.ComponentPropsWithoutRef<
-  typeof Dialog
-> {
-  items: Row<CategoryData>['original'][]
+import { useCategoryRowAction } from '../state'
+
+interface DeleteCategoriesDialogProps {
   showTrigger?: boolean
-  onSuccess?: () => void
 }
 
 function CategoriesDeleteDialog({
-  items,
   showTrigger = true,
-  onSuccess,
-  ...props
 }: DeleteCategoriesDialogProps) {
+  const { rowAction, setRowAction } = useCategoryRowAction()
+
   const trpc = useTRPC()
   const qc = useQueryClient()
 
   const isDesktop = useMediaQuery('(min-width: 640px)')
 
   const searchParams = useSearch({ from: '/_admin/dashboard/categories' })
-  const categoriesKey = trpc.categories.transaction.queryKey(searchParams)
+  const categoriesKey = trpc.categories.list.queryKey(searchParams)
+
+  const items = rowAction?.rows.map((row) => row.original) || []
 
   const { mutateAsync, isPending } = useMutation(
-    trpc.categories.delete.mutationOptions(),
+    trpc.categories.delete.mutationOptions({
+      onSuccess: (data) => {
+        qc.setQueriesData({ queryKey: categoriesKey }, (prev: any) => {
+          if (!prev) return prev
+          const items = prev.items.filter(
+            (item: any) => item.id && !data.ids.includes(item.id),
+          )
+          return {
+            ...prev,
+            items,
+          }
+        })
+        return data
+      },
+      onError: (error) => {
+        const message =
+          error?.message || 'An error occurred while deleting the category.'
+        toast.error(message)
+      },
+    }),
   )
 
   function onDelete() {
     const ids = items.map((item) => item.id)
 
     toast.promise(mutateAsync({ ids }), {
-      loading: `Deleting ${ids.length} categories...`,
+      loading: `Deleting ${ids.length} ${pluralize('Category', ids.length)}...`,
       success: (response) => {
-        qc.invalidateQueries({
-          queryKey: categoriesKey,
-        })
-
-        props.onOpenChange?.(false)
-        onSuccess?.()
-        return response?.message || 'Categories deleted successfully'
+        rowAction?.rows.forEach((row) => row.toggleSelected(false))
+        return response?.message || `Deleted successfully`
       },
       error: (error) => {
         return error?.message || 'Something went wrong'
       },
     })
+    setRowAction(null)
+  }
+
+  const props = {
+    open: rowAction?.variant === 'delete',
+    onOpenChange: () => setRowAction(null),
   }
 
   if (isDesktop) {
@@ -91,10 +108,11 @@ function CategoriesDeleteDialog({
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your{' '}
-              <span className="font-medium">{items.length}</span>
-              {items.length === 1 ? ' category' : ' categories'} from our
-              servers.
+              This action cannot be undone. Deleting this{' '}
+              <span className="font-bold">
+                {pluralize('category', items.length)}{' '}
+              </span>
+              will remove it from active use.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:space-x-0">

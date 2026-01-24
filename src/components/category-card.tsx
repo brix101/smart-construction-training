@@ -9,15 +9,10 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getRandomPatternStyle } from '@/lib/generate-pattern'
+import { RouterOutput } from '@/server/trpc/router/_app'
 
 interface CategoryCardProps {
-  category: {
-    id: string
-    name: string
-    imgSrc: string
-    description: string
-    courseCount: number
-  }
+  category: RouterOutput['categories']['getAll'][0]
   href: string
 }
 
@@ -33,7 +28,6 @@ export function CategoryCard({ category, href }: CategoryCardProps) {
               src={category.imgSrc}
               alt={category.name}
               className="h-full w-full object-cover"
-              sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
               loading="lazy"
             />
           ) : (

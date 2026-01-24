@@ -49,7 +49,7 @@ function RouteComponent() {
               </div>
             </header>
 
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto mt-4 px-4">
               <Outlet />
             </div>
           </main>

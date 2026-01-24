@@ -1,4 +1,4 @@
-import { Ellipsis, TextIcon } from 'lucide-react'
+import { CalendarIcon, Ellipsis, TextIcon } from 'lucide-react'
 
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
@@ -13,19 +13,17 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { formatDate } from '@/lib/format'
 import { getRandomPatternStyle } from '@/lib/generate-pattern'
-import { CategoryData } from '@/types/data'
-import { DataTableRowAction } from '@/types/data-table'
+import { RouterOutput } from '@/server/trpc/router/_app'
 
-interface GetCategoriesTableColumnsProps {
-  setRowAction: React.Dispatch<
-    React.SetStateAction<DataTableRowAction<CategoryData> | null>
-  >
-}
+import { useCategoryRowAction } from '../state'
 
-export function getCategoriesTableColumns({
-  setRowAction,
-}: GetCategoriesTableColumnsProps): ColumnDef<CategoryData>[] {
+type ColumnType = RouterOutput['categories']['list']['items'][0]
+
+interface GetCategoriesTableColumnsProps {}
+
+export function getCategoriesTableColumns({}: GetCategoriesTableColumnsProps): ColumnDef<ColumnType>[] {
   return [
     {
       id: 'select',
@@ -137,8 +135,25 @@ export function getCategoriesTableColumns({
       enableSorting: false,
     },
     {
+      id: 'createdAt',
+      accessorKey: 'createdAt',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="Created At" />
+      ),
+      cell: ({ cell }) => formatDate(cell.getValue<Date>()),
+      meta: {
+        label: 'Created At',
+        variant: 'date',
+        icon: CalendarIcon,
+      },
+      enableSorting: true,
+      enableColumnFilter: true,
+    },
+    {
       id: 'actions',
       cell: function Cell({ row }) {
+        const setRowAction = useCategoryRowAction((state) => state.setRowAction)
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -152,13 +167,17 @@ export function getCategoriesTableColumns({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
               <DropdownMenuItem
-                onSelect={() => setRowAction({ row, variant: 'update' })}
+                onSelect={() =>
+                  setRowAction({ rows: [row], variant: 'update' })
+                }
               >
                 Edit
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onSelect={() => setRowAction({ row, variant: 'delete' })}
+                onSelect={() =>
+                  setRowAction({ rows: [row], variant: 'delete' })
+                }
               >
                 Delete
                 <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>

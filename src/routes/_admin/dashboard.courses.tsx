@@ -21,17 +21,15 @@ function RouteComponent() {
   )
 
   return (
-    <div className="mt-10">
-      <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {data?.map((course) => (
-          <DashboardCourseCard course={course} href={`#`} />
-        ))}
+    <section className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      {data?.map((course) => (
+        <DashboardCourseCard key={course.id} course={course} href={`#`} />
+      ))}
 
-        {isLoading &&
-          Array.from({ length: 4 }).map((_, i) => (
-            <DashboardCourseCardSkeleton key={i} />
-          ))}
-      </section>
-    </div>
+      {isLoading &&
+        Array.from({ length: 4 }).map((_, i) => (
+          <DashboardCourseCardSkeleton key={i} />
+        ))}
+    </section>
   )
 }

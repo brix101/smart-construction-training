@@ -3,5 +3,6 @@ export type CategoryData = {
   name: string
   imgSrc: string
   description: string
+  createdAt: Date
   courseCount: number
 }

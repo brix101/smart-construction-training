@@ -7,12 +7,12 @@ import { DataTable } from '@/components/data-table/data-table'
 import { DataTableSkeleton } from '@/components/data-table/data-table-skeleton'
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import CategoriesActionBar from '@/features/categories/components/categories-action-bar'
+import { CategoriesCreateSheet } from '@/features/categories/components/categories-create-sheet'
 import CategoriesDeleteDialog from '@/features/categories/components/categories-delete-dialog'
 import { getCategoriesTableColumns } from '@/features/categories/components/categories-table-columns'
+import { CategoriesUpdateSheet } from '@/features/categories/components/categories-update-sheet'
 import { useDataTable } from '@/hooks/use-data-table'
 import { categoriesSearchParams } from '@/schema/search'
-import { CategoryData } from '@/types/data'
-import { DataTableRowAction } from '@/types/data-table'
 
 export const Route = createFileRoute('/_admin/dashboard/categories')({
   validateSearch: createStandardSchemaV1(categoriesSearchParams, {
@@ -25,23 +25,14 @@ function RouteComponent() {
   const { trpc } = Route.useRouteContext()
   const search = Route.useSearch()
 
-  const [rowAction, setRowAction] =
-    React.useState<DataTableRowAction<CategoryData> | null>(null)
-
   const { data, isLoading } = useQuery(
-    trpc.categories.transaction.queryOptions({
+    trpc.categories.list.queryOptions({
       ...search,
       sort: search.sort ?? [{ id: 'name', desc: false }],
     }),
   )
 
-  const columns = React.useMemo(
-    () =>
-      getCategoriesTableColumns({
-        setRowAction,
-      }),
-    [],
-  )
+  const columns = React.useMemo(() => getCategoriesTableColumns({}), [])
 
   const { table } = useDataTable({
     data: data?.items || [],
@@ -49,6 +40,7 @@ function RouteComponent() {
     pageCount: data?.pageCount || 1,
     initialState: {
       sorting: search.sort ?? [{ id: 'name', desc: false }],
+      columnPinning: { right: ['actions'] },
     },
     getRowId: (originalRow) => originalRow.id,
     clearOnDefault: true,
@@ -56,31 +48,26 @@ function RouteComponent() {
 
   if (isLoading) {
     return (
-      <div className="mt-4">
-        <DataTableSkeleton
-          columnCount={columns.length}
-          filterCount={1}
-          shrinkZero
-        />
-      </div>
+      <DataTableSkeleton
+        columnCount={columns.length}
+        filterCount={1}
+        shrinkZero
+      />
     )
   }
 
   return (
-    <div className="mt-4">
+    <>
       <DataTable
         table={table}
         actionBar={<CategoriesActionBar table={table} />}
       >
-        <DataTableToolbar table={table}></DataTableToolbar>
+        <DataTableToolbar table={table}>
+          <CategoriesCreateSheet />
+        </DataTableToolbar>
       </DataTable>
-      <CategoriesDeleteDialog
-        open={rowAction?.variant === 'delete'}
-        onOpenChange={() => setRowAction(null)}
-        items={rowAction?.row.original ? [rowAction?.row.original] : []}
-        showTrigger={false}
-        onSuccess={() => rowAction?.row.toggleSelected(false)}
-      />
-    </div>
+      <CategoriesUpdateSheet />
+      <CategoriesDeleteDialog showTrigger={false} />
+    </>
   )
 }
