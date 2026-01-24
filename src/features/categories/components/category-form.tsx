@@ -44,7 +44,7 @@ export function CategoryForm<T extends FieldValues>({
             <FormItem>
               <FormLabel>Image</FormLabel>
               <FormControl>
-                <Card className="mx-auto h-60 w-60 items-center justify-center overflow-hidden">
+                <Card className="mx-auto size-44 items-center justify-center overflow-hidden border-dashed">
                   {field.value ? (
                     <AspectRatio ratio={4 / 4}>
                       <img
@@ -67,14 +67,9 @@ export function CategoryForm<T extends FieldValues>({
                       endpoint="imageUploader"
                       onClientUploadComplete={(res) => {
                         field.onChange(res[0].ufsUrl)
-                        //   setIsUploading(false)
                       }}
                       onUploadError={(error: Error) => {
-                        //   setIsUploading(false)
                         toast.error(error.message)
-                      }}
-                      onUploadBegin={() => {
-                        //   setIsUploading(true)
                       }}
                     />
                   )}

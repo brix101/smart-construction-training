@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useSearch } from '@tanstack/react-router'
-import { Loader, Trash } from 'lucide-react'
+import { Loader } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -12,7 +12,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
   Drawer,
@@ -22,7 +21,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { pluralize } from '@/lib/pluralize'
@@ -30,13 +28,7 @@ import { useTRPC } from '@/lib/trpc'
 
 import { useCategoryRowAction } from '../state'
 
-interface DeleteCategoriesDialogProps {
-  showTrigger?: boolean
-}
-
-function CategoriesDeleteDialog({
-  showTrigger = true,
-}: DeleteCategoriesDialogProps) {
+function CategoriesDeleteDialog() {
   const { rowAction, setRowAction } = useCategoryRowAction()
 
   const trpc = useTRPC()
@@ -96,14 +88,6 @@ function CategoriesDeleteDialog({
   if (isDesktop) {
     return (
       <Dialog {...props}>
-        {showTrigger ? (
-          <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Trash className="mr-2 size-4" />
-              Delete ({items.length})
-            </Button>
-          </DialogTrigger>
-        ) : null}
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
@@ -136,14 +120,6 @@ function CategoriesDeleteDialog({
 
   return (
     <Drawer {...props}>
-      {showTrigger ? (
-        <DrawerTrigger asChild>
-          <Button variant="outline" size="sm">
-            <Trash className="mr-2 size-4" />
-            Delete ({items.length})
-          </Button>
-        </DrawerTrigger>
-      ) : null}
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>

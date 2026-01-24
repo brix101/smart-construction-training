@@ -4,6 +4,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
@@ -17,7 +18,7 @@ import { formatDate } from '@/lib/format'
 import { getRandomPatternStyle } from '@/lib/generate-pattern'
 import { RouterOutput } from '@/server/trpc/router/_app'
 
-import { useCategoryRowAction } from '../state'
+import { useCategoryPreview, useCategoryRowAction } from '../state'
 
 type ColumnType = RouterOutput['categories']['list']['items'][0]
 
@@ -58,8 +59,18 @@ export function getCategoriesTableColumns({}: GetCategoriesTableColumnsProps): C
       cell: ({ row }) => {
         const imgSrc = row.original.imgSrc
         const name = row.original.name
+
+        const setSrc = useCategoryPreview((state) => state.setItem)
+
+        function previewImage() {
+          setSrc(row.original)
+        }
+
         return (
-          <div className="h-16 w-16 overflow-hidden rounded-sm border">
+          <Card
+            className="size-10 cursor-pointer overflow-hidden p-0 hover:opacity-80"
+            onClick={previewImage}
+          >
             <AspectRatio ratio={4 / 4}>
               {imgSrc ? (
                 <img
@@ -76,7 +87,7 @@ export function getCategoriesTableColumns({}: GetCategoriesTableColumnsProps): C
                 />
               )}
             </AspectRatio>
-          </div>
+          </Card>
         )
       },
       enableSorting: false,

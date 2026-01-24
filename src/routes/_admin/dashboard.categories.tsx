@@ -9,6 +9,7 @@ import { DataTableToolbar } from '@/components/data-table/data-table-toolbar'
 import CategoriesActionBar from '@/features/categories/components/categories-action-bar'
 import { CategoriesCreateSheet } from '@/features/categories/components/categories-create-sheet'
 import CategoriesDeleteDialog from '@/features/categories/components/categories-delete-dialog'
+import { CategoriesImagePreview } from '@/features/categories/components/categories-image-preview'
 import { getCategoriesTableColumns } from '@/features/categories/components/categories-table-columns'
 import { CategoriesUpdateSheet } from '@/features/categories/components/categories-update-sheet'
 import { useDataTable } from '@/hooks/use-data-table'
@@ -67,7 +68,8 @@ function RouteComponent() {
         </DataTableToolbar>
       </DataTable>
       <CategoriesUpdateSheet />
-      <CategoriesDeleteDialog showTrigger={false} />
+      <CategoriesDeleteDialog />
+      <CategoriesImagePreview />
     </>
   )
 }
