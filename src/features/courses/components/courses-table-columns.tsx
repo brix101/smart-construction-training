@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { CalendarIcon, Ellipsis, TextIcon } from 'lucide-react'
 
 import type { ColumnDef } from '@tanstack/react-table'
@@ -76,11 +77,13 @@ export function getCoursesTableColumns({}: GetCoursesTableColumnsProps): ColumnD
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label="Name" />
       ),
-      cell: ({ row: { original } }) => {
-        const name = original.name
-
-        return <p>{name}</p>
-      },
+      cell: ({ row: { original } }) => (
+        <Button variant="link" className="p-0">
+          <Link to="/dashboard/courses/{-$id}" params={{ id: original.id }}>
+            {original.name}
+          </Link>
+        </Button>
+      ),
       enableSorting: false,
       enableHiding: false,
       enableColumnFilter: true,
@@ -153,12 +156,13 @@ export function getCoursesTableColumns({}: GetCoursesTableColumnsProps): ColumnD
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem
-              // onSelect={() =>
-              //   setRowAction({ rows: [row], variant: 'update' })
-              // }
-              >
-                Edit
+              <DropdownMenuItem asChild>
+                <Link
+                  to="/dashboard/courses/{-$id}"
+                  params={{ id: row.original.id }}
+                >
+                  Edit
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem

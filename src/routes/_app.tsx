@@ -16,9 +16,11 @@ function RouteComponent() {
           <SignIn />
         </Shell>
       </SignedOut>
-      <SignedIn>
+      <SignedIn treatPendingAsSignedOut>
         <SiteHeader />
-        <Outlet />
+        <Shell>
+          <Outlet />
+        </Shell>
       </SignedIn>
     </main>
   )

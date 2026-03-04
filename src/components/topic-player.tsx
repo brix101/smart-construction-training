@@ -20,16 +20,7 @@ export function TopicPlayer({ topicId }: TopicPlayerProps) {
   )
 
   if (isLoading) {
-    return (
-      <>
-        <Skeleton className="mb-4 aspect-video w-full rounded-xl" />
-        <Skeleton className="mt-10 mb-2 h-8 w-3/4" />
-        <div className="mb-4 flex items-center gap-2">
-          <Skeleton className="h-8 w-1/4 rounded-md" />
-          <Skeleton className="h-8 w-1/4 rounded-md" />
-        </div>
-      </>
-    )
+    return <TopicPlayerSkeleton />
   }
 
   if (!topic) {
@@ -60,6 +51,19 @@ export function TopicPlayer({ topicId }: TopicPlayerProps) {
       <div className="mb-4 flex items-center gap-2">
         <DownloadButton materials={topic.materials} />
         <UploadButton materials={topic.materials} />
+      </div>
+    </>
+  )
+}
+
+export function TopicPlayerSkeleton() {
+  return (
+    <>
+      <Skeleton className="mb-4 aspect-video w-full rounded-xl" />
+      <Skeleton className="mt-10 mb-2 h-8 w-3/4" />
+      <div className="mb-4 flex items-center gap-2">
+        <Skeleton className="h-8 w-1/4 rounded-md" />
+        <Skeleton className="h-8 w-1/4 rounded-md" />
       </div>
     </>
   )

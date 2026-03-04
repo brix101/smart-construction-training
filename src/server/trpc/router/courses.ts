@@ -80,24 +80,18 @@ export const coursesRouter = {
       }
     }),
   getById: protectedProcedure
-    .input(z.object({ courseId: z.string() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      if (input.courseId === 'logo.png') {
+      if (input.id === 'logo.png') {
         return null
       }
 
       try {
         const item = await ctx.db.query.courses.findFirst({
-          where: eq(courses.id, input.courseId),
-          with: {
-            topics: {
-              where: eq(topics.isActive, true),
-              orderBy: sql`COALESCE(SUBSTRING(${topics.name} FROM '^(\\d+)')::INTEGER,99999999)`,
-            },
-          },
+          where: and(eq(courses.id, input.id), eq(courses.isActive, true)),
         })
 
-        return item ? item : null
+        return item
       } catch (error) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',

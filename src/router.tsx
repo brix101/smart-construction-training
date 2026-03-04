@@ -22,7 +22,6 @@ export const getRouter = () => {
       trpc: serverHelpers,
       queryClient: queryClient,
     },
-
     defaultPreload: 'intent',
     Wrap: function WrapComponent({ children }) {
       return (

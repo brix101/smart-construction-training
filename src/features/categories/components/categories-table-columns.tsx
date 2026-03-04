@@ -67,27 +67,26 @@ export function getCategoriesTableColumns({}: GetCategoriesTableColumnsProps): C
         }
 
         return (
-          <Card
-            className="size-10 cursor-pointer overflow-hidden p-0 hover:opacity-80"
-            onClick={previewImage}
-          >
-            <AspectRatio ratio={4 / 4}>
-              {imgSrc ? (
-                <img
-                  src={imgSrc}
-                  alt={name}
-                  className="h-full w-full object-cover"
-                  sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
-                  loading="lazy"
-                />
-              ) : (
-                <div
-                  className="h-full rounded-t-md border-b object-center"
-                  style={getRandomPatternStyle(row.original.id)}
-                />
-              )}
-            </AspectRatio>
-          </Card>
+          <Button variant="link" className="p-0" onClick={previewImage}>
+            <Card className="size-10 overflow-hidden p-0 hover:opacity-80">
+              <AspectRatio ratio={4 / 4}>
+                {imgSrc ? (
+                  <img
+                    src={imgSrc}
+                    alt={name}
+                    className="h-full w-full object-cover"
+                    sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div
+                    className="h-full rounded-t-md border-b object-center"
+                    style={getRandomPatternStyle(row.original.id)}
+                  />
+                )}
+              </AspectRatio>
+            </Card>
+          </Button>
         )
       },
       enableSorting: false,
@@ -100,10 +99,19 @@ export function getCategoriesTableColumns({}: GetCategoriesTableColumnsProps): C
       header: ({ column }) => (
         <DataTableColumnHeader column={column} label="Name" />
       ),
-      cell: ({ row: { original } }) => {
-        const name = original.name
+      cell: ({ row }) => {
+        const setRowAction = useCategoryRowAction((state) => state.setRowAction)
 
-        return <p>{name}</p>
+        const original = row.original
+        return (
+          <Button
+            variant="link"
+            className="p-0"
+            onClick={() => setRowAction({ rows: [row], variant: 'update' })}
+          >
+            {original.name}
+          </Button>
+        )
       },
       enableSorting: false,
       enableHiding: false,

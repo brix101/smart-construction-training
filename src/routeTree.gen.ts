@@ -18,9 +18,9 @@ import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as ApiUploadthingSplatRouteImport } from './routes/api/uploadthing.$'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as AdminDashboardUsersRouteImport } from './routes/_admin/dashboard.users'
-import { Route as AdminDashboardCoursesRouteImport } from './routes/_admin/dashboard.courses'
 import { Route as AdminDashboardCategoriesRouteImport } from './routes/_admin/dashboard.categories'
 import { Route as AppCIdChar123SlugChar125RouteImport } from './routes/_app/c.$id.{-$slug}'
+import { Route as AdminDashboardCoursesChar123IdChar125RouteImport } from './routes/_admin/dashboard.courses.{-$id}'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -64,11 +64,6 @@ const AdminDashboardUsersRoute = AdminDashboardUsersRouteImport.update({
   path: '/dashboard/users',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminDashboardCoursesRoute = AdminDashboardCoursesRouteImport.update({
-  id: '/dashboard/courses',
-  path: '/dashboard/courses',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminDashboardCategoriesRoute =
   AdminDashboardCategoriesRouteImport.update({
     id: '/dashboard/categories',
@@ -81,27 +76,33 @@ const AppCIdChar123SlugChar125Route =
     path: '/c/$id/{-$slug}',
     getParentRoute: () => AppRoute,
   } as any)
+const AdminDashboardCoursesChar123IdChar125Route =
+  AdminDashboardCoursesChar123IdChar125RouteImport.update({
+    id: '/dashboard/courses/{-$id}',
+    path: '/dashboard/courses/{-$id}',
+    getParentRoute: () => AdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof AppIndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
-  '/': typeof AppIndexRoute
   '/dashboard/categories': typeof AdminDashboardCategoriesRoute
-  '/dashboard/courses': typeof AdminDashboardCoursesRoute
   '/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
+  '/dashboard/courses/{-$id}': typeof AdminDashboardCoursesChar123IdChar125Route
   '/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
 }
 export interface FileRoutesByTo {
+  '/': typeof AppIndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
-  '/': typeof AppIndexRoute
   '/dashboard/categories': typeof AdminDashboardCategoriesRoute
-  '/dashboard/courses': typeof AdminDashboardCoursesRoute
   '/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
+  '/dashboard/courses/{-$id}': typeof AdminDashboardCoursesChar123IdChar125Route
   '/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
 }
 export interface FileRoutesById {
@@ -113,34 +114,34 @@ export interface FileRoutesById {
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/_app/': typeof AppIndexRoute
   '/_admin/dashboard/categories': typeof AdminDashboardCategoriesRoute
-  '/_admin/dashboard/courses': typeof AdminDashboardCoursesRoute
   '/_admin/dashboard/users': typeof AdminDashboardUsersRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/uploadthing/$': typeof ApiUploadthingSplatRoute
+  '/_admin/dashboard/courses/{-$id}': typeof AdminDashboardCoursesChar123IdChar125Route
   '/_app/c/$id/{-$slug}': typeof AppCIdChar123SlugChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/sign-in'
     | '/sign-up'
-    | '/'
     | '/dashboard/categories'
-    | '/dashboard/courses'
     | '/dashboard/users'
     | '/api/trpc/$'
     | '/api/uploadthing/$'
+    | '/dashboard/courses/{-$id}'
     | '/c/$id/{-$slug}'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/sign-in'
     | '/sign-up'
-    | '/'
     | '/dashboard/categories'
-    | '/dashboard/courses'
     | '/dashboard/users'
     | '/api/trpc/$'
     | '/api/uploadthing/$'
+    | '/dashboard/courses/{-$id}'
     | '/c/$id/{-$slug}'
   id:
     | '__root__'
@@ -151,10 +152,10 @@ export interface FileRouteTypes {
     | '/_auth/sign-up'
     | '/_app/'
     | '/_admin/dashboard/categories'
-    | '/_admin/dashboard/courses'
     | '/_admin/dashboard/users'
     | '/api/trpc/$'
     | '/api/uploadthing/$'
+    | '/_admin/dashboard/courses/{-$id}'
     | '/_app/c/$id/{-$slug}'
   fileRoutesById: FileRoutesById
 }
@@ -171,21 +172,21 @@ declare module '@tanstack/react-router' {
     '/_auth': {
       id: '/_auth'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app': {
       id: '/_app'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_admin': {
       id: '/_admin'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -231,13 +232,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardUsersRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/_admin/dashboard/courses': {
-      id: '/_admin/dashboard/courses'
-      path: '/dashboard/courses'
-      fullPath: '/dashboard/courses'
-      preLoaderRoute: typeof AdminDashboardCoursesRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/_admin/dashboard/categories': {
       id: '/_admin/dashboard/categories'
       path: '/dashboard/categories'
@@ -252,19 +246,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCIdChar123SlugChar125RouteImport
       parentRoute: typeof AppRoute
     }
+    '/_admin/dashboard/courses/{-$id}': {
+      id: '/_admin/dashboard/courses/{-$id}'
+      path: '/dashboard/courses/{-$id}'
+      fullPath: '/dashboard/courses/{-$id}'
+      preLoaderRoute: typeof AdminDashboardCoursesChar123IdChar125RouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
   AdminDashboardCategoriesRoute: typeof AdminDashboardCategoriesRoute
-  AdminDashboardCoursesRoute: typeof AdminDashboardCoursesRoute
   AdminDashboardUsersRoute: typeof AdminDashboardUsersRoute
+  AdminDashboardCoursesChar123IdChar125Route: typeof AdminDashboardCoursesChar123IdChar125Route
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardCategoriesRoute: AdminDashboardCategoriesRoute,
-  AdminDashboardCoursesRoute: AdminDashboardCoursesRoute,
   AdminDashboardUsersRoute: AdminDashboardUsersRoute,
+  AdminDashboardCoursesChar123IdChar125Route:
+    AdminDashboardCoursesChar123IdChar125Route,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

@@ -5,6 +5,7 @@ import { db } from '@/server/db'
 
 export const createContext = async (opts: FetchCreateContextFnOptions) => {
   try {
+    console.log('[createContext]', opts.req)
     const user = await getAuth(opts.req)
 
     return {
