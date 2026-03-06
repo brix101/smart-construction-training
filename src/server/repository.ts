@@ -8,11 +8,11 @@ export class HelloService extends Effect.Service<HelloService>()(
         Effect.gen(function* () {
           // yield* Effect.sleep("1 seconds")
 
-          // const rand = Math.random()
-          // if (rand < 0.2) {
-          //   yield* Effect.logError(`Failed to say hello to ${name ?? "world"}`)
-          //   throw new Error("Failed to say hello, please try again.")
-          // }
+          const rand = Math.random()
+          if (rand < 0.2) {
+            yield* Effect.logError(`Failed to say hello to ${name ?? "world"}`)
+            throw new Error("Failed to say hello, please try again.")
+          }
 
           yield* Effect.logInfo(`Hello, ${name ?? "world"}!`)
 

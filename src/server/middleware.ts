@@ -116,10 +116,6 @@ export const AuthMiddlewareLive = Layer.effect(
           )
         )
 
-        console.log("Session from auth API:", session)
-
-        // 3. Execute the `next` handler, providing the required CurrentUser to it!
-        // This returns the `SuccessValue` that the RPC framework is looking for.
         return yield* Effect.provideService(
           opts.next,
           CurrentUser,

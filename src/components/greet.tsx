@@ -2,11 +2,12 @@ import React from "react"
 import { Atom, Result } from "@effect-atom/atom"
 import { useAtom } from "@effect-atom/atom-react"
 import { RpcClientError } from "@effect/rpc/RpcClientError"
-import { serializable } from "#/lib/atom-utils"
-import { EffectRpcClient } from "#/lib/rpc-client"
 import * as Data from "effect/Data"
 import * as Effect from "effect/Effect"
 import * as Schema from "effect/Schema"
+
+import { serializable } from "#/lib/atom-utils"
+import { EffectRpcClient } from "#/lib/rpc-client"
 
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -68,6 +69,9 @@ export const helloAtom = (() => {
         })()
 
         ctx.setSelf(Result.success(nextValue))
+      },
+      (refresh) => {
+        refresh(remoteHello)
       }
     ),
     { remote: remoteHello }

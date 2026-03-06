@@ -9,21 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LobbyRouteImport } from './routes/_lobby'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as LobbyIndexRouteImport } from './routes/_lobby.index'
 import { Route as AuthSignUpRouteImport } from './routes/_auth.sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth.sign-in'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as LobbyCIdChar123SlugChar125RouteImport } from './routes/_lobby.c.$id.{-$slug}'
 
+const LobbyRoute = LobbyRouteImport.update({
+  id: '/_lobby',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const LobbyIndexRoute = LobbyIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => LobbyRoute,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
   id: '/sign-up',
@@ -45,54 +51,85 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LobbyCIdChar123SlugChar125Route =
+  LobbyCIdChar123SlugChar125RouteImport.update({
+    id: '/c/$id/{-$slug}',
+    path: '/c/$id/{-$slug}',
+    getParentRoute: () => LobbyRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof LobbyIndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/c/$id/{-$slug}': typeof LobbyCIdChar123SlugChar125Route
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof LobbyIndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/c/$id/{-$slug}': typeof LobbyCIdChar123SlugChar125Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/_lobby': typeof LobbyRouteWithChildren
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
+  '/_lobby/': typeof LobbyIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
+  '/_lobby/c/$id/{-$slug}': typeof LobbyCIdChar123SlugChar125Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-in' | '/sign-up' | '/api/auth/$' | '/api/rpc/$'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-in' | '/sign-up' | '/api/auth/$' | '/api/rpc/$'
-  id:
-    | '__root__'
+  fullPaths:
     | '/'
-    | '/_auth'
-    | '/_auth/sign-in'
-    | '/_auth/sign-up'
+    | '/sign-in'
+    | '/sign-up'
     | '/api/auth/$'
     | '/api/rpc/$'
+    | '/c/$id/{-$slug}'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/api/auth/$'
+    | '/api/rpc/$'
+    | '/c/$id/{-$slug}'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_lobby'
+    | '/_auth/sign-in'
+    | '/_auth/sign-up'
+    | '/_lobby/'
+    | '/api/auth/$'
+    | '/api/rpc/$'
+    | '/_lobby/c/$id/{-$slug}'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  LobbyRoute: typeof LobbyRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_lobby': {
+      id: '/_lobby'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LobbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -100,12 +137,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_lobby/': {
+      id: '/_lobby/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof LobbyIndexRouteImport
+      parentRoute: typeof LobbyRoute
     }
     '/_auth/sign-up': {
       id: '/_auth/sign-up'
@@ -135,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_lobby/c/$id/{-$slug}': {
+      id: '/_lobby/c/$id/{-$slug}'
+      path: '/c/$id/{-$slug}'
+      fullPath: '/c/$id/{-$slug}'
+      preLoaderRoute: typeof LobbyCIdChar123SlugChar125RouteImport
+      parentRoute: typeof LobbyRoute
+    }
   }
 }
 
@@ -150,9 +194,21 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface LobbyRouteChildren {
+  LobbyIndexRoute: typeof LobbyIndexRoute
+  LobbyCIdChar123SlugChar125Route: typeof LobbyCIdChar123SlugChar125Route
+}
+
+const LobbyRouteChildren: LobbyRouteChildren = {
+  LobbyIndexRoute: LobbyIndexRoute,
+  LobbyCIdChar123SlugChar125Route: LobbyCIdChar123SlugChar125Route,
+}
+
+const LobbyRouteWithChildren = LobbyRoute._addFileChildren(LobbyRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  LobbyRoute: LobbyRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }

@@ -1,10 +1,7 @@
-import { Headers } from "@effect/platform"
 import * as FetchHttpClient from "@effect/platform/FetchHttpClient"
-import { RpcMiddleware } from "@effect/rpc"
 import * as RpcClient from "@effect/rpc/RpcClient"
 import * as RpcSerialization from "@effect/rpc/RpcSerialization"
 import { DomainRpc } from "#/server/domain"
-import { AuthMiddleware } from "#/server/middleware"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
 import { hasProperty } from "effect/Predicate"
@@ -89,22 +86,13 @@ export class ApiClient extends Effect.Service<ApiClient>()("ApiClient", {
   }),
 }) {}
 
-export const AuthClientLive = RpcMiddleware.layerClient(
-  AuthMiddleware,
-  ({ request, rpc }) => {
-    console.log(request, rpc)
-
-    return Effect.succeed({
-      ...request,
-      headers: Headers.set(request.headers, "authorization", "Bearer token"),
-    })
-  }
-)
-
 export class EffectRpcClient extends Effect.Service<EffectRpcClient>()(
   "EffectRpcClient",
   {
-    dependencies: [AuthClientLive, RpcConfigLive, FetchHttpClient.layer],
-    scoped: RpcClient.make(DomainRpc, {}),
+    dependencies: [RpcConfigLive, FetchHttpClient.layer],
+    scoped: Effect.gen(function* () {
+      const rpcClient = yield* RpcClient.make(DomainRpc, {})
+      return addRpcErrorLogging(rpcClient)
+    }),
   }
 ) {}

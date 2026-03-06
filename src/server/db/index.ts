@@ -1,10 +1,10 @@
 import { DatabaseError as NeonDbError, Pool } from "@neondatabase/serverless"
-import * as authSchema from "#/server/db/schema/auth-schema"
-import * as schema from "#/server/db/schema/schema"
 import { drizzle } from "drizzle-orm/neon-serverless"
 import { Config, Context, Data, Effect, Layer, Redacted } from "effect"
 
 import type { PoolConfig } from "@neondatabase/serverless"
+import * as authSchema from "#/server/db/schema/auth-schema"
+import * as schema from "#/server/db/schema/schema"
 
 const allSchemas = {
   ...authSchema,

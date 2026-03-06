@@ -2,6 +2,8 @@ import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import * as Schema from "effect/Schema"
 
+import { CategoryRpc } from "./modules/categories/category.rpc"
+
 export class HelloRpc extends RpcGroup.make(
   Rpc.make("greet", {
     success: Schema.NonEmptyString,
@@ -9,4 +11,6 @@ export class HelloRpc extends RpcGroup.make(
   })
 ).prefix("hello_") {}
 
-export class DomainRpc extends RpcGroup.make().merge(HelloRpc) {}
+export class DomainRpc extends RpcGroup.make()
+  .merge(HelloRpc)
+  .merge(CategoryRpc) {}

@@ -107,7 +107,7 @@ export const categories = pgTable("categories", (t) => ({
   description: t.text().notNull(),
   imgSrc: t.text().notNull(),
   isActive: t.boolean().notNull().default(true),
-  createdAt: t.timestamp().defaultNow().notNull(),
+  createdAt: t.timestamp({ mode: "string" }).defaultNow().notNull(),
   updatedAt: t
     .timestamp({ mode: "string", withTimezone: true })
     .$onUpdateFn(() => sql`now()`),

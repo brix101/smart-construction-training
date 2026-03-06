@@ -1,7 +1,8 @@
 import * as RpcSerialization from "@effect/rpc/RpcSerialization"
 import * as RpcServer from "@effect/rpc/RpcServer"
-import { DomainRpc } from "#/server/domain"
 import * as Layer from "effect/Layer"
+
+import { DomainRpc } from "#/server/domain"
 
 import * as Auth from "./auth"
 import {
@@ -10,7 +11,10 @@ import {
   RpcLogger,
   RpcLoggerLive,
 } from "./middleware"
+import { CategoryRpcLive } from "./modules/categories/category.rpc"
 import { HelloRpcLive } from "./services"
+
+const rpcGroups = Layer.mergeAll(HelloRpcLive, CategoryRpcLive)
 
 export const RpcRouter = RpcServer.layerHttpRouter({
   group: DomainRpc.middleware(RpcLogger).middleware(AuthMiddleware),
@@ -19,7 +23,7 @@ export const RpcRouter = RpcServer.layerHttpRouter({
   spanPrefix: "rpc",
   disableFatalDefects: true,
 }).pipe(
-  Layer.provide(HelloRpcLive),
+  Layer.provide(rpcGroups),
   Layer.provide(RpcLoggerLive),
   Layer.provide(AuthMiddlewareLive),
   Layer.provide(Auth.fromDefault),

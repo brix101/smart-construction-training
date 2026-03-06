@@ -2,17 +2,6 @@ import type z from "zod"
 import React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Link } from "@tanstack/react-router"
-import { PasswordInput } from "#/components/password-input"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "#/components/ui/form"
-import { Spinner } from "#/components/ui/spinner"
-import { authClient } from "#/lib/auth-client"
 import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
@@ -31,6 +20,17 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
+import { PasswordInput } from "#/components/password-input"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "#/components/ui/form"
+import { Spinner } from "#/components/ui/spinner"
+import { authClient } from "#/lib/auth-client"
 
 import { signinSchema } from "../schema"
 import { GoogleButton } from "./google-button"

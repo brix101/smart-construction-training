@@ -1,12 +1,13 @@
 import * as HttpLayerRouter from "@effect/platform/HttpLayerRouter"
 import * as HttpServerResponse from "@effect/platform/HttpServerResponse"
 import { createFileRoute } from "@tanstack/react-router"
-import { HelloService } from "#/server/repository"
-import { RpcRouter } from "#/server/rpc"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
 import * as Logger from "effect/Logger"
 import * as ManagedRuntime from "effect/ManagedRuntime"
+
+import { HelloService } from "#/server/repository"
+import { RpcRouter } from "#/server/rpc"
 
 const HealthRoute = HttpLayerRouter.use((router) =>
   router.add("GET", "/api/rpc/health", HttpServerResponse.text("OK"))
