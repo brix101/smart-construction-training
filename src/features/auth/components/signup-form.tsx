@@ -1,36 +1,29 @@
 import type z from "zod"
 import React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Link } from "node_modules/@tanstack/react-router/dist/esm/link"
-import { useForm } from "react-hook-form"
+import { Link } from "@tanstack/react-router"
+import { Controller, useForm } from "react-hook-form"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "~/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "~/components/ui/card"
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
+  FieldLabel,
   FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
-import { PasswordInput } from "#/components/password-input"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "#/components/ui/form"
-import { Spinner } from "#/components/ui/spinner"
-import { authClient } from "#/lib/auth-client"
+} from "~/components/ui/field"
+import { Input } from "~/components/ui/input"
+import { Spinner } from "~/components/ui/spinner"
+import { authClient } from "~/lib/auth-client"
+import { cn } from "~/lib/utils"
 
 import { signupSchema } from "../schema"
 import { GoogleButton } from "./google-button"
@@ -81,88 +74,87 @@ export function SignupForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)}>
-              <FieldGroup>
-                <Field>
-                  <GoogleButton />
-                </Field>
-                <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
-                  Or
-                </FieldSeparator>
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John Doe" {...field} />
-                      </FormControl>
-                      <FormMessage className="capitalize" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="m@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage className="capitalize" />
-                    </FormItem>
-                  )}
-                />
-
-                <Field>
-                  <Field className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Password</FormLabel>
-                          <FormControl>
-                            <PasswordInput placeholder="********" {...field} />
-                          </FormControl>
-                          <FormMessage className="capitalize" />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Confirm Password</FormLabel>
-                          <FormControl>
-                            <PasswordInput placeholder="********" {...field} />
-                          </FormControl>
-                          <FormMessage className="capitalize" />
-                        </FormItem>
-                      )}
-                    />
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <FieldGroup>
+              <Field>
+                <GoogleButton />
+              </Field>
+              <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
+                Or
+              </FieldSeparator>
+              <Controller
+                control={form.control}
+                name="name"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                    <Input placeholder="John Doe" {...field} />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
                   </Field>
-                  <FieldDescription>
-                    Must be at least 8 characters long.
-                  </FieldDescription>
-                </Field>
+                )}
+              />
+              <Controller
+                control={form.control}
+                name="email"
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <Input placeholder="m@example.com" {...field} />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
 
-                <Field>
-                  <Button type="submit" disabled={isPending}>
-                    {isPending ? <Spinner /> : "Create Account"}
-                  </Button>
-                  <FieldDescription className="text-center">
-                    Already have an account? <Link to="/sign-in">Sign in</Link>
-                  </FieldDescription>
+              <Field>
+                <Field className="grid grid-cols-2 gap-4">
+                  <Controller
+                    control={form.control}
+                    name="password"
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="password">Password</FieldLabel>
+                        <Input placeholder="********" {...field} />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="confirmPassword">
+                          Confirm Password
+                        </FieldLabel>
+                        <Input placeholder="********" {...field} />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
                 </Field>
-              </FieldGroup>
-            </form>
-          </Form>
+                <FieldDescription>
+                  Must be at least 8 characters long.
+                </FieldDescription>
+              </Field>
+
+              <Field>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? <Spinner /> : "Create Account"}
+                </Button>
+                <FieldDescription className="text-center">
+                  Already have an account? <Link to="/sign-in">Sign in</Link>
+                </FieldDescription>
+              </Field>
+            </FieldGroup>
+          </form>
         </CardContent>
       </Card>
     </div>

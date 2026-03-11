@@ -7,9 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "#/components/ui/breadcrumb"
-import { Separator } from "#/components/ui/separator"
-import { Skeleton } from "#/components/ui/skeleton"
+} from "~/components/ui/breadcrumb"
+import { Skeleton } from "~/components/ui/skeleton"
 
 import { getCategoryAtom } from "../atom"
 
@@ -25,7 +24,7 @@ export function CatgoryBreadCrumb({ id }: { id: string }) {
     .render()
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 border-b pb-4">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -40,7 +39,6 @@ export function CatgoryBreadCrumb({ id }: { id: string }) {
       <h2 className="line-clamp-1 h-8 text-xl font-bold md:text-2xl">
         {builder}
       </h2>
-      <Separator className="my-1.5" />
     </div>
   )
 }

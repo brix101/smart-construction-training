@@ -1,6 +1,9 @@
-import { Rpc, RpcGroup } from "@effect/rpc"
-import { CurrentUser } from "#/server/middleware"
-import { Effect, Layer, Schema } from "effect"
+import * as Rpc from "@effect/rpc"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as Schema from "effect/Schema"
+
+import { CurrentUser, Unauthorized } from "~/server/middleware"
 
 import {
   Category,
@@ -10,31 +13,32 @@ import {
 } from "./category.schema"
 import { CategoryService } from "./category.service"
 
-export class CategoryRpc extends RpcGroup.make(
-  Rpc.make("getAll", {
+export class CategoryRpc extends Rpc.RpcGroup.make(
+  Rpc.Rpc.make("GetAll", {
     success: Schema.Array(LobbyCategory),
+    error: Unauthorized,
   }),
 
-  Rpc.make("getById", {
+  Rpc.Rpc.make("GetById", {
     success: Category,
-    error: CategoryNotFound,
+    error: Schema.Union(CategoryNotFound, Unauthorized),
     payload: { id: CategoryId },
   })
-).prefix("category_") {}
+).prefix("Category_") {}
 
 export const CategoryRpcLive = CategoryRpc.toLayer(
   Effect.gen(function* () {
     const service = yield* CategoryService
 
     return {
-      category_getAll: () =>
+      Category_GetAll: () =>
         CurrentUser.pipe(
           Effect.flatMap(() => {
             return service.getAll
           })
         ),
 
-      category_getById: ({ id }) =>
+      Category_GetById: ({ id }) =>
         CurrentUser.pipe(
           Effect.flatMap(() => {
             return service.getById(id)

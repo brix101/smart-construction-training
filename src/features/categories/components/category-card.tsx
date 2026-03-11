@@ -1,15 +1,14 @@
-import type { LobbyCategory } from "#/server/modules/categories/category.schema"
+import type { LobbyCategory } from "~/server/modules/categories/category.schema"
 import { Link } from "@tanstack/react-router"
-
-import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { AspectRatio } from "~/components/ui/aspect-ratio"
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { getRandomPatternStyle } from "@/lib/generate-pattern"
+} from "~/components/ui/card"
+import { Skeleton } from "~/components/ui/skeleton"
+import { getRandomPatternStyle } from "~/lib/generate-pattern"
 
 interface CategoryCardProps {
   category: LobbyCategory
@@ -20,13 +19,13 @@ export function CategoryCard({ category, href }: CategoryCardProps) {
   return (
     <Link to={href}>
       <span className="sr-only">{category.name}</span>
-      <Card className="hover:bg-muted/50 h-full overflow-hidden transition-colors">
+      <Card className="hover:bg-muted h-full overflow-hidden transition-colors">
         <AspectRatio ratio={21 / 9}>
           {category.imgSrc ? (
             <img
               src={category.imgSrc}
               alt={category.name}
-              className="h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
               loading="lazy"
             />
           ) : (
@@ -36,12 +35,12 @@ export function CategoryCard({ category, href }: CategoryCardProps) {
             />
           )}
         </AspectRatio>
-        <CardHeader className="space-y-2">
+        <CardHeader>
           <CardTitle className="line-clamp-1">{category.name}</CardTitle>
-          <CardDescription className="line-clamp-1">
-            With {category.count} {category.count === 1 ? "course" : "courses"}{" "}
-            available.
-          </CardDescription>
+          {/* <CardDescription className="line-clamp-1"> */}
+          {/*   With {category.count} {category.count === 1 ? "course" : "courses"}{" "} */}
+          {/*   available. */}
+          {/* </CardDescription> */}
         </CardHeader>
       </Card>
     </Link>
@@ -56,7 +55,7 @@ export function CategoryCardSkeleton() {
       </AspectRatio>
       <CardHeader className="space-y-2">
         <Skeleton className="h-5 w-1/2" />
-        <Skeleton className="h-4 w-1/4" />
+        {/* <Skeleton className="h-4 w-1/4" /> */}
       </CardHeader>
     </Card>
   )

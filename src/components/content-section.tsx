@@ -1,10 +1,10 @@
 import * as React from "react"
 import { Link } from "@tanstack/react-router"
 import { ArrowRight } from "lucide-react"
-import { Slot } from "radix-ui"
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { buttonVariants } from "~/components/ui/button"
+import { Slot } from "~/components/ui/slot"
+import { cn } from "~/lib/utils"
 
 interface ContentSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
@@ -25,7 +25,7 @@ export function ContentSection({
   asChild = false,
   ...props
 }: ContentSectionProps) {
-  const ChildrenShell = asChild ? Slot.Root : "div"
+  const ChildrenShell = asChild ? Slot : "div"
 
   return (
     <section className={cn("space-y-6", className)} {...props}>
@@ -41,13 +41,17 @@ export function ContentSection({
           ) : null}
         </div>
         {href && (
-          <Button variant="outline" className="hidden sm:flex" asChild>
-            <Link to={href}>
-              {linkText}
-              <ArrowRight className="ml-2 size-4" aria-hidden="true" />
-              <span className="sr-only"> {linkText}</span>
-            </Link>
-          </Button>
+          <Link
+            to={href}
+            className={buttonVariants({
+              variant: "outline",
+              className: "hidden sm:flex",
+            })}
+          >
+            {linkText}
+            <ArrowRight className="ml-2 size-4" aria-hidden="true" />
+            <span className="sr-only"> {linkText}</span>
+          </Link>
         )}
       </div>
       <div className="space-y-8">
@@ -60,17 +64,17 @@ export function ContentSection({
           {children}
         </ChildrenShell>
         {href && (
-          <Button
-            variant="ghost"
-            className="mx-auto flex w-fit sm:hidden"
-            asChild
+          <Link
+            to={href}
+            className={buttonVariants({
+              variant: "ghost",
+              className: "mx-auto flex w-fit sm:hidden",
+            })}
           >
-            <Link to={href}>
-              {linkText}
-              <ArrowRight className="ml-2 size-4" aria-hidden="true" />
-              <span className="sr-only"> {linkText}</span>
-            </Link>
-          </Button>
+            {linkText}
+            <ArrowRight className="ml-2 size-4" aria-hidden="true" />
+            <span className="sr-only"> {linkText}</span>
+          </Link>
         )}
       </div>
     </section>

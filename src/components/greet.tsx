@@ -6,16 +6,16 @@ import * as Data from "effect/Data"
 import * as Effect from "effect/Effect"
 import * as Schema from "effect/Schema"
 
-import { serializable } from "#/lib/atom-utils"
-import { EffectRpcClient } from "#/lib/rpc-client"
+import { serializable } from "~/lib/atom-utils"
+import { RpcProtocolClient } from "~/lib/rpc-client"
 
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 
 class GreetRpc extends Effect.Service<GreetRpc>()("@app/index/GreetRpc", {
-  dependencies: [EffectRpcClient.Default],
+  dependencies: [RpcProtocolClient.Default],
   effect: Effect.gen(function* () {
-    const rpc = yield* EffectRpcClient
+    const rpc = yield* RpcProtocolClient
 
     return {
       initial: () => rpc.hello_greet({ name: undefined }),

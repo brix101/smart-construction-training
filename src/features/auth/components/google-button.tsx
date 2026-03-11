@@ -1,5 +1,5 @@
-import { Icons } from "#/components/icons"
-import { Button } from "#/components/ui/button"
+import { Icons } from "~/components/icons"
+import { Button } from "~/components/ui/button"
 
 export function GoogleButton() {
   return (

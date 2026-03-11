@@ -1,17 +1,18 @@
 import { Atom } from "@effect-atom/atom"
-import { EffectRpcClient } from "#/lib/rpc-client"
-import { Effect } from "effect"
+import * as Effect from "effect/Effect"
+
+import { RpcProtocolClient } from "~/lib/rpc-client"
 
 class CourseRpc extends Effect.Service<CourseRpc>()("@features/courses", {
   effect: Effect.gen(function* () {
-    const rpc = yield* EffectRpcClient
+    const rpc = yield* RpcProtocolClient
 
     return {
       //   getAll: () => rpc.category_getAll(),
       //   getById: (id: CourseId) => rpc.category_getById({ id }),
     } as const
   }),
-  dependencies: [EffectRpcClient.Default],
+  dependencies: [RpcProtocolClient.Default],
 }) {}
 
 export const runtime = Atom.runtime(CourseRpc.Default)

@@ -1,10 +1,12 @@
 import type { User } from "better-auth"
-import { HttpApiSchema } from "@effect/platform"
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema"
 import * as RpcMiddleware from "@effect/rpc/RpcMiddleware"
-import { Context, Predicate, Schema } from "effect"
+import * as Context from "effect/Context"
 import * as Effect from "effect/Effect"
 import * as Exit from "effect/Exit"
 import * as Layer from "effect/Layer"
+import * as Predicate from "effect/Predicate"
+import * as Schema from "effect/Schema"
 
 import { Auth } from "./auth"
 
@@ -43,13 +45,11 @@ export class CurrentUser extends Context.Tag("CurrentUser")<
 export class Unauthorized extends Schema.TaggedError<Unauthorized>()(
   "Unauthorized",
   {
-    actorId: Schema.String, // (Assuming UserId is a string/branded string)
+    actorId: Schema.String,
     entity: Schema.String,
     action: Schema.String,
-    // 1. Add your custom application code here!
     code: Schema.Literal("MISSING_ROLE", "ACCOUNT_SUSPENDED", "TRIAL_EXPIRED"),
   },
-  // This still correctly sets the HTTP transport status to 403
   HttpApiSchema.annotations({ status: 403 })
 ) {
   get message() {
@@ -60,7 +60,6 @@ export class Unauthorized extends Schema.TaggedError<Unauthorized>()(
     return Predicate.isTagged(u, "Unauthorized")
   }
 
-  // 2. Update your refail helper to accept the code
   static refail(
     entity: string,
     action: string,
@@ -69,9 +68,9 @@ export class Unauthorized extends Schema.TaggedError<Unauthorized>()(
       | "ACCOUNT_SUSPENDED"
       | "TRIAL_EXPIRED" = "MISSING_ROLE"
   ) {
-    return <A, E, R>(
-      effect: Effect.Effect<A, E, R>
-    ): Effect.Effect<A, E | Unauthorized, CurrentUser | R> =>
+    return <TArg, TError, TResult>(
+      effect: Effect.Effect<TArg, TError, TResult>
+    ): Effect.Effect<TArg, TError | Unauthorized, CurrentUser | TResult> =>
       Effect.catchAll(effect, (e) => {
         if (Unauthorized.is(e)) return Effect.fail(e)
 
@@ -102,9 +101,9 @@ export const AuthMiddlewareLive = Layer.effect(
     return AuthMiddleware.of((opts) =>
       Effect.gen(function* () {
         const session = yield* auth.getSession.pipe(
-          Effect.flatMap((session) =>
-            session
-              ? Effect.succeed(session)
+          Effect.flatMap((res) =>
+            res
+              ? Effect.succeed(res)
               : Effect.fail(
                   new Unauthorized({
                     actorId: "unknown",

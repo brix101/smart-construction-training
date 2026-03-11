@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router"
 
-import { Icons } from "@/components/icons"
-import { siteConfig } from "@/lib/config"
+import { Icons } from "~/components/icons"
+import { siteConfig } from "~/lib/config"
 
 interface MainNavProps {}
 

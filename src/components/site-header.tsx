@@ -1,4 +1,4 @@
-import { ThemeToggle } from "@/components/theme-provider"
+import { ThemeToggle } from "~/components/theme-provider"
 
 import { MainNav } from "./main-nav"
 

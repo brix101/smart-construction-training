@@ -454,7 +454,7 @@ const bgPattern = (
     .replace(/</g, "%3C")
     .replace(/>/g, "%3E")
     .replace(/&/g, "%26")
-    .replace(/#/g, "%23")
+    .replace(/~/g, "%23")
   return 'url("data:image/svg+xml,' + svg + '")'
 }
 

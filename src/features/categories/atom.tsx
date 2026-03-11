@@ -1,25 +1,31 @@
+import type * as Data from "effect/Data"
 import { Atom, Result } from "@effect-atom/atom"
 import { serializable } from "@effect-atom/atom/Atom"
 import { RpcClientError } from "@effect/rpc/RpcClientError"
-import { EffectRpcClient } from "#/lib/rpc-client"
+import * as Array from "effect/Array"
+import * as Effect from "effect/Effect"
+import * as Option from "effect/Option"
+import * as Schema from "effect/Schema"
+
+import { RpcProtocolClient } from "~/lib/rpc-client"
+import { Unauthorized } from "~/server/middleware"
 import {
   CategoryId,
   LobbyCategory,
-} from "#/server/modules/categories/category.schema"
-import { Array, Data, Effect, Option, Schema } from "effect"
+} from "~/server/modules/categories/category.schema"
 
 class CategoryRpc extends Effect.Service<CategoryRpc>()(
   "@features/categories",
   {
     effect: Effect.gen(function* () {
-      const rpc = yield* EffectRpcClient
+      const rpc = yield* RpcProtocolClient
 
       return {
-        getAll: () => rpc.category_getAll(),
-        getById: (id: CategoryId) => rpc.category_getById({ id }),
+        getAll: rpc.Category_GetAll,
+        getById: rpc.Category_GetById,
       } as const
     }),
-    dependencies: [EffectRpcClient.Default],
+    dependencies: [RpcProtocolClient.Default],
   }
 ) {}
 
@@ -44,7 +50,7 @@ export const categoriesAtom = (() => {
         key: "@features/categories/categoriesAtom",
         schema: Result.Schema({
           success: Schema.Array(LobbyCategory),
-          error: RpcClientError,
+          error: Schema.Union(Unauthorized, RpcClientError),
         }),
       })
     )
@@ -87,7 +93,7 @@ export const categoriesAtom = (() => {
 export const getCategoryByIdAtom = runtime.fn<{ id: string }>()(
   Effect.fnUntraced(function* (input) {
     const rpc = yield* CategoryRpc
-    const result = yield* rpc.getById(CategoryId.make(input.id))
+    const result = yield* rpc.getById({ id: CategoryId.make(input.id) })
     return result
   })
 )
@@ -96,7 +102,7 @@ export const getCategoryAtom = (id: string) => {
   const remote = runtime.atom(
     Effect.gen(function* () {
       const rpc = yield* CategoryRpc
-      return yield* rpc.getById(CategoryId.make(id))
+      return yield* rpc.getById({ id: CategoryId.make(id) })
     })
   )
 

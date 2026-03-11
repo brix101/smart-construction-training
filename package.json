@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "imports": {
-    "#/*": "./src/*"
+    "~/*": "./src/*"
   },
   "scripts": {
     "dev": "vite dev --port 3000",
@@ -21,6 +21,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@base-ui/react": "^1.2.0",
     "@better-auth/drizzle-adapter": "^1.5.3",
     "@effect-atom/atom": "^0.5.3",
     "@effect-atom/atom-react": "^0.5.0",
@@ -32,11 +33,10 @@
     "@t3-oss/env-core": "^0.13.8",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.7.0",
-    "@tanstack/react-router": "^1.132.0",
-    "@tanstack/react-router-devtools": "^1.132.0",
+    "@tanstack/react-router": "^1.166.7",
+    "@tanstack/react-router-devtools": "^1.166.7",
     "@tanstack/react-router-ssr-query": "^1.131.7",
     "@tanstack/react-start": "^1.132.0",
-    "@tanstack/router-plugin": "^1.132.0",
     "better-auth": "^1.4.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -46,7 +46,6 @@
     "next-themes": "^0.4.6",
     "nitro": "npm:nitro-nightly@latest",
     "pg": "^8.16.3",
-    "radix-ui": "^1.4.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.2",
@@ -62,6 +61,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-vite": "^0.3.11",
     "@tanstack/eslint-config": "^0.3.0",
+    "@tanstack/router-plugin": "^1.166.7",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^22.10.2",
@@ -72,6 +72,7 @@
     "dotenv": "^16.0.0",
     "dotenv-cli": "^11.0.0",
     "drizzle-kit": "^0.31.8",
+    "eslint": "^9.39.4",
     "jsdom": "^27.0.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.7.2",

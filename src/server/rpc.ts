@@ -2,7 +2,7 @@ import * as RpcSerialization from "@effect/rpc/RpcSerialization"
 import * as RpcServer from "@effect/rpc/RpcServer"
 import * as Layer from "effect/Layer"
 
-import { DomainRpc } from "#/server/domain"
+import { DomainRpc } from "~/server/domain"
 
 import * as Auth from "./auth"
 import {

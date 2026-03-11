@@ -1,3 +1,5 @@
+"use client"
+
 import type { ToasterProps } from "sonner"
 import {
   CircleCheckIcon,
@@ -31,6 +33,11 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }
+      toastOptions={{
+        classNames: {
+          toast: "cn-toast",
+        },
+      }}
       {...props}
     />
   )

@@ -1,13 +1,21 @@
 import { Result, useAtomRefresh, useAtomValue } from "@effect-atom/atom-react"
 import { createFileRoute } from "@tanstack/react-router"
-
-import { ContentSection } from "#/components/content-section"
-import { Button } from "#/components/ui/button"
-import { categoriesAtom } from "#/features/categories/atom"
+import { ContentSection } from "~/components/content-section"
+import { Button } from "~/components/ui/button"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/components/ui/empty"
+import { categoriesAtom } from "~/features/categories/atom"
 import {
   CategoryCard,
   CategoryCardSkeleton,
-} from "#/features/categories/components/category-card"
+} from "~/features/categories/components/category-card"
+import { FolderCode } from "lucide-react"
 
 export const Route = createFileRoute("/_lobby/")({
   component: RouteComponent,
@@ -39,13 +47,22 @@ function RouteComponent() {
         )
         .onFailure(() => {
           return (
-            <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
-              <p className="mb-2 text-red-700 dark:text-red-200">
-                Failed to load data. Please try again.
-              </p>
-              <Button onClick={refresh} variant={"destructive"}>
-                Retry
-              </Button>
+            <div className="col-span-full">
+              <Empty>
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <FolderCode />
+                  </EmptyMedia>
+                  <EmptyTitle>No Courses Available</EmptyTitle>
+                  <EmptyDescription>
+                    We couldn't load the courses right now. Please check your
+                    connection or try again in a few moments.
+                  </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                  <Button onClick={refresh}>Retry</Button>
+                </EmptyContent>
+              </Empty>
             </div>
           )
         })

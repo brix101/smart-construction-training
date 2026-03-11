@@ -1,5 +1,5 @@
-import { HttpApiSchema } from "@effect/platform"
-import { Schema } from "effect"
+import * as HttpApiSchema from "@effect/platform/HttpApiSchema"
+import * as Schema from "effect/Schema"
 
 export const CategoryId = Schema.UUID.pipe(Schema.brand("CategoryId"))
 export type CategoryId = typeof CategoryId.Type
@@ -29,8 +29,6 @@ export type LobbyCategoryT = typeof LobbyCategory.Type
 
 export class CategoryNotFound extends Schema.TaggedError<CategoryNotFound>()(
   "CategoryNotFoundj",
-  {
-    id: CategoryId,
-  },
+  { id: CategoryId },
   HttpApiSchema.annotations({ status: 404 })
 ) {}

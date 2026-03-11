@@ -2,7 +2,7 @@ import * as React from "react"
 import { MoonIcon, SunIcon } from "lucide-react"
 import * as z from "zod/v4"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "~/components/ui/button"
 
 const ThemeModeSchema = z.enum(["light", "dark", "auto"])
 

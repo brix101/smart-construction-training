@@ -1,39 +1,40 @@
 import * as FetchHttpClient from "@effect/platform/FetchHttpClient"
 import * as RpcClient from "@effect/rpc/RpcClient"
 import * as RpcSerialization from "@effect/rpc/RpcSerialization"
-import { DomainRpc } from "#/server/domain"
 import * as Effect from "effect/Effect"
 import * as Layer from "effect/Layer"
-import { hasProperty } from "effect/Predicate"
+import * as Predicate from "effect/Predicate"
 import * as Stream from "effect/Stream"
 
-export const addRpcErrorLogging = <Client>(client: Client): Client => {
+import { DomainRpc } from "~/server/domain"
+
+export const addRpcErrorLogging = <TArg>(client: TArg): TArg => {
   const isStream = (
     u: unknown
   ): u is Stream.Stream<unknown, unknown, unknown> =>
-    hasProperty(u, Stream.StreamTypeId)
+    Predicate.hasProperty(u, Stream.StreamTypeId)
 
-  const wrapCall = <F extends (...args: Array<any>) => any>(
-    fn: F,
+  const wrapCall = <TFn extends (...args: Array<any>) => any>(
+    fn: TFn,
     path: ReadonlyArray<string>
-  ): F => {
+  ): TFn => {
     const rpcId = path.join(".")
     const logCause = (cause: unknown) =>
       Effect.logError(`[API] ${rpcId} failed`, cause)
 
     return function (
-      this: ThisParameterType<F>,
-      ...args: Parameters<F>
-    ): ReturnType<F> {
+      this: ThisParameterType<TFn>,
+      ...args: Parameters<TFn>
+    ): ReturnType<TFn> {
       const result = fn.apply(this, args)
       if (Effect.isEffect(result)) {
-        return result.pipe(Effect.tapErrorCause(logCause)) as ReturnType<F>
+        return result.pipe(Effect.tapErrorCause(logCause)) as ReturnType<TFn>
       }
       if (isStream(result)) {
-        return result.pipe(Stream.tapErrorCause(logCause)) as ReturnType<F>
+        return result.pipe(Stream.tapErrorCause(logCause)) as ReturnType<TFn>
       }
       return result
-    } as F
+    } as TFn
   }
 
   const visit = (node: unknown, path: ReadonlyArray<string>) => {
@@ -50,7 +51,7 @@ export const addRpcErrorLogging = <Client>(client: Client): Client => {
     return node
   }
 
-  return visit(client, []) as Client
+  return visit(client, []) as TArg
 }
 
 const getBaseUrl = (): string =>
@@ -58,38 +59,14 @@ const getBaseUrl = (): string =>
     ? window.location.origin
     : "http://localhost:3000"
 
-const RpcConfigLive = RpcClient.layerProtocolHttp({
+const ProtocolLive = RpcClient.layerProtocolHttp({
   url: getBaseUrl() + "/api/rpc",
 }).pipe(Layer.provide([FetchHttpClient.layer, RpcSerialization.layerNdjson]))
 
-export class ApiClient extends Effect.Service<ApiClient>()("ApiClient", {
-  dependencies: [RpcConfigLive, FetchHttpClient.layer],
-  scoped: Effect.gen(function* () {
-    const rpcClient = yield* RpcClient.make(DomainRpc, {})
-
-    // const httpClient = yield* HttpApiClient.make(DomainApi, {
-    //   baseUrl: getBaseUrl() + "/api",
-    //   transformClient: (client) =>
-    //     client.pipe(
-    //       HttpClient.filterStatusOk,
-    //       HttpClient.retryTransient({
-    //         times: 3,
-    //         schedule: Schedule.exponential("1 second"),
-    //       }),
-    //     ),
-    // });
-
-    return {
-      rpc: addRpcErrorLogging(rpcClient),
-      //   http: httpClient,
-    }
-  }),
-}) {}
-
-export class EffectRpcClient extends Effect.Service<EffectRpcClient>()(
-  "EffectRpcClient",
+export class RpcProtocolClient extends Effect.Service<RpcProtocolClient>()(
+  "lib/RpcProtocolClient",
   {
-    dependencies: [RpcConfigLive, FetchHttpClient.layer],
+    dependencies: [ProtocolLive, FetchHttpClient.layer],
     scoped: Effect.gen(function* () {
       const rpcClient = yield* RpcClient.make(DomainRpc, {})
       return addRpcErrorLogging(rpcClient)

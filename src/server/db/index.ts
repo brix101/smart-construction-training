@@ -1,10 +1,15 @@
 import { DatabaseError as NeonDbError, Pool } from "@neondatabase/serverless"
 import { drizzle } from "drizzle-orm/neon-serverless"
-import { Config, Context, Data, Effect, Layer, Redacted } from "effect"
+import * as Config from "effect/Config"
+import * as Context from "effect/Context"
+import * as Data from "effect/Data"
+import * as Effect from "effect/Effect"
+import * as Layer from "effect/Layer"
+import * as Redacted from "effect/Redacted"
 
 import type { PoolConfig } from "@neondatabase/serverless"
-import * as authSchema from "#/server/db/schema/auth-schema"
-import * as schema from "#/server/db/schema/schema"
+import * as authSchema from "~/server/db/schema/auth-schema"
+import * as schema from "~/server/db/schema/schema"
 
 const allSchemas = {
   ...authSchema,
@@ -44,6 +49,7 @@ export class DatabaseError extends Data.TaggedError("DatabaseError")<{
 }
 
 type DatabaseShape = {
+  client: Client
   use: <T>(
     fn: (
       client: ReturnType<typeof drizzle<typeof allSchemas, Pool>>
@@ -91,6 +97,7 @@ const make = (config?: PoolConfig) =>
     })
 
     return Database.of({
+      client: db,
       use: Effect.fn("Database.use")((fn) =>
         Effect.tryPromise({
           try: () => fn(db),

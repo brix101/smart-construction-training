@@ -1,8 +1,8 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 
-import { Shell } from "#/components/shell"
-import { SiteHeader } from "#/components/site-header"
-import { getSessionFn } from "#/server/auth/sesion"
+import { Shell } from "~/components/shell"
+import { SiteHeader } from "~/components/site-header"
+import { getSessionFn } from "~/server/auth/sesion"
 
 export const Route = createFileRoute("/_lobby")({
   beforeLoad: async () => {
