@@ -1,3 +1,15 @@
+import type { ExtendedColumnSort, QueryKeys } from '@/types/data-table'
+import type {
+  ColumnFiltersState,
+  PaginationState,
+  RowSelectionState,
+  SortingState,
+  TableOptions,
+  TableState,
+  Updater,
+  VisibilityState,
+} from '@tanstack/react-table'
+import type { SingleParser, UseQueryStateOptions } from 'nuqs'
 import * as React from 'react'
 import {
   getCoreRowModel,
@@ -16,19 +28,7 @@ import {
   useQueryState,
   useQueryStates,
 } from 'nuqs'
-import type { SingleParser, UseQueryStateOptions } from 'nuqs'
 
-import type {
-  ColumnFiltersState,
-  PaginationState,
-  RowSelectionState,
-  SortingState,
-  TableOptions,
-  TableState,
-  Updater,
-  VisibilityState,
-} from '@tanstack/react-table'
-import type { ExtendedColumnSort, QueryKeys } from '@/types/data-table'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { getSortingStateParser } from '@/lib/parsers'
 

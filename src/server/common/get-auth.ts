@@ -1,7 +1,7 @@
+import type { JwtPayload } from 'jwt-decode'
 import { jwtDecode } from 'jwt-decode'
 
 import { clerkClient } from './clerk'
-import type { JwtPayload } from 'jwt-decode';
 
 export type SessionJwtPayload = JwtPayload & {
   sub: string

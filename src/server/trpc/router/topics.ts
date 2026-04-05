@@ -1,9 +1,10 @@
+import type { TopicGroup } from '@/types/topic'
+import type { TRPCRouterRecord } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 import { and, asc, eq, ilike, lte, or, sql } from 'drizzle-orm'
 import z from 'zod'
 
-import type { TopicGroup } from '@/types/topic'
-import type { TRPCRouterRecord } from '@trpc/server'
+import { getMetadata } from '@/server/common/clerk'
 import { courses, topics } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
@@ -48,7 +49,7 @@ export const topicsRouter = {
     .input(z.object({ query: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        const level = Number(ctx.session.sessionClaims.metadata.level || 0)
+        const level = getMetadata(ctx.session).level
         const query = input.query
 
         const filteredTopics = await ctx.db

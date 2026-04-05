@@ -4,6 +4,7 @@ import type {
   FilterVariant,
 } from '@/types/data-table'
 import type { Column } from '@tanstack/react-table'
+
 import { dataTableConfig } from '@/config/data-table'
 
 export function getColumnPinningStyle<TData>({

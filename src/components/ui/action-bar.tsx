@@ -46,9 +46,7 @@ function focusFirst(
 }
 
 function wrapArray<T>(array: Array<T>, startIndex: number) {
-  return array.map<T>(
-    (_, index) => array[(startIndex + index) % array.length],
-  )
+  return array.map<T>((_, index) => array[(startIndex + index) % array.length])
 }
 
 function getDirectionAwareKey(key: string, dir?: Direction) {

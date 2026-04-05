@@ -62,7 +62,7 @@ const getNextTheme = (current: ThemeMode): ThemeMode => {
     getSystemTheme() === 'dark'
       ? ['auto', 'light', 'dark']
       : ['auto', 'dark', 'light']
-   
+
   return themes[(themes.indexOf(current) + 1) % themes.length]
 }
 

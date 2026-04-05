@@ -1,9 +1,9 @@
 'use client'
 
+import type { Table } from '@tanstack/react-table'
 import * as React from 'react'
 import { Check, Settings2 } from 'lucide-react'
 
-import type { Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import {
   Command,

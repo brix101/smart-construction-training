@@ -1,6 +1,6 @@
+import type { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form'
 import { XIcon } from 'lucide-react'
 import { toast } from 'sonner'
-import type { FieldPath, FieldValues, UseFormReturn } from 'react-hook-form'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'

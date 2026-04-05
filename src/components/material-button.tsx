@@ -1,6 +1,6 @@
+import type { Material } from '@/server/db/schema'
 import { Download, UploadCloudIcon } from 'lucide-react'
 
-import type { Material } from '@/server/db/schema'
 import { Button } from '@/components/ui/button'
 
 interface TopicButtonProps {

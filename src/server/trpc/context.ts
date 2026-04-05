@@ -1,6 +1,6 @@
+import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { auth } from '@clerk/tanstack-react-start/server'
 
-import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { clerkClient } from '@/server/common/clerk'
 import { db } from '@/server/db'
 

@@ -1,6 +1,6 @@
+import type { Course } from '@/server/db/schema'
 import { Link } from '@tanstack/react-router'
 
-import type { Course } from '@/server/db/schema'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Badge } from '@/components/ui/badge'
 import {

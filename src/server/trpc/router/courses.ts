@@ -1,9 +1,9 @@
+import type { Course } from '@/server/db/schema'
+import type { TRPCRouterRecord } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 import { and, asc, countDistinct, desc, eq, sql } from 'drizzle-orm'
 import z from 'zod'
 
-import type { Course } from '@/server/db/schema'
-import type { TRPCRouterRecord } from '@trpc/server'
 import { searchParamsSchema } from '@/schema/search'
 import { courseCategories, courses, topics } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'

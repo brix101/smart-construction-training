@@ -1,6 +1,6 @@
+import type { MainNavItem } from '@/types'
 import { Link } from '@tanstack/react-router'
 
-import type { MainNavItem } from '@/types'
 import { Icons } from '@/components/icons'
 import { siteConfig } from '@/lib/config'
 

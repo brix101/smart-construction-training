@@ -1,10 +1,10 @@
 'use client'
 
+import type { Option } from '@/components/data-table/data-table'
+import type { Column } from '@tanstack/react-table'
 import * as React from 'react'
 import { Check, PlusCircle, XCircle } from 'lucide-react'
 
-import type { Option } from '@/components/data-table/data-table'
-import type { Column } from '@tanstack/react-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {

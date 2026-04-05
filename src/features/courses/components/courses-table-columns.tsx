@@ -1,8 +1,8 @@
+import type { RouterOutput } from '@/server/trpc/router/_app'
+import type { ColumnDef } from '@tanstack/react-table'
 import { Link } from '@tanstack/react-router'
 import { CalendarIcon, Ellipsis, TextIcon } from 'lucide-react'
 
-import type { ColumnDef } from '@tanstack/react-table'
-import type { RouterOutput } from '@/server/trpc/router/_app'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
@@ -23,7 +23,9 @@ type ColumnType = RouterOutput['courses']['list']['items'][0]
 
 interface GetCoursesTableColumnsProps {}
 
-export function getCoursesTableColumns({}: GetCoursesTableColumnsProps): Array<ColumnDef<ColumnType>> {
+export function getCoursesTableColumns({}: GetCoursesTableColumnsProps): Array<
+  ColumnDef<ColumnType>
+> {
   return [
     {
       id: 'select',

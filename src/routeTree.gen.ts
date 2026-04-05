@@ -8,19 +8,22 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as AppRouteImport } from './routes/_app'
 import { Route as AdminRouteImport } from './routes/_admin'
-import { Route as AppIndexRouteImport } from './routes/_app/index'
-import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
-import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
-import { Route as ApiUploadthingSplatRouteImport } from './routes/api/uploadthing.$'
-import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
-import { Route as AdminDashboardUsersRouteImport } from './routes/_admin/dashboard.users'
 import { Route as AdminDashboardCategoriesRouteImport } from './routes/_admin/dashboard.categories'
-import { Route as AppCIdChar123SlugChar125RouteImport } from './routes/_app/c.$id.{-$slug}'
 import { Route as AdminDashboardCoursesChar123IdChar125RouteImport } from './routes/_admin/dashboard.courses.{-$id}'
+import { Route as AdminDashboardUsersRouteImport } from './routes/_admin/dashboard.users'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppCIdChar123SlugChar125RouteImport } from './routes/_app/c.$id.{-$slug}'
+import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
+import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
+import { Route as ApiUploadthingSplatRouteImport } from './routes/api/uploadthing.$'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -306,8 +309,6 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true

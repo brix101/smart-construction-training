@@ -3,7 +3,6 @@ import { useSearch } from '@tanstack/react-router'
 import { Loader } from 'lucide-react'
 import { toast } from 'sonner'
 
-import { useCategoryRowAction } from '../state'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -27,6 +26,7 @@ import { useMediaQuery } from '@/hooks/use-media-query'
 import { pluralize } from '@/lib/pluralize'
 import { useTRPC } from '@/lib/trpc'
 
+import { useCategoryRowAction } from '../state'
 
 function CategoriesDeleteDialog() {
   const { rowAction, setRowAction } = useCategoryRowAction()

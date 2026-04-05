@@ -1,3 +1,4 @@
+import type { AppRouter } from '@/server/trpc/router/_app'
 import { QueryClient } from '@tanstack/react-query'
 import { createTRPCClient, httpBatchStreamLink, loggerLink } from '@trpc/client'
 import {
@@ -5,8 +6,6 @@ import {
   createTRPCOptionsProxy,
 } from '@trpc/tanstack-react-query'
 import superjson from 'superjson'
-
-import type { AppRouter } from '@/server/trpc/router/_app'
 
 function getUrl() {
   const base = (() => {

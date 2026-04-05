@@ -1,6 +1,6 @@
+import type { RouterOutput } from '@/server/trpc/router/_app'
 import { Link } from '@tanstack/react-router'
 
-import type { RouterOutput } from '@/server/trpc/router/_app'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import {
   Card,

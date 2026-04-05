@@ -1,6 +1,6 @@
+import type { TRPCRouterRecord } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 
-import type { TRPCRouterRecord } from '@trpc/server'
 import { searchParamsSchema } from '@/schema/search'
 import { protectedProcedure } from '@/server/trpc/trpc'
 

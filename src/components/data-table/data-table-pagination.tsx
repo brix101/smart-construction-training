@@ -1,3 +1,4 @@
+import type { Table } from '@tanstack/react-table'
 import {
   ChevronLeft,
   ChevronRight,
@@ -5,7 +6,6 @@ import {
   ChevronsRight,
 } from 'lucide-react'
 
-import type { Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import {
   Select,

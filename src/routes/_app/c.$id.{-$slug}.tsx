@@ -1,9 +1,9 @@
+import type { Course } from '@/server/db/schema'
 import { useQuery } from '@tanstack/react-query'
-import { Link, createFileRoute, notFound } from '@tanstack/react-router'
+import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { ArrowLeft, PlayIcon } from 'lucide-react'
 import z from 'zod'
 
-import type { Course } from '@/server/db/schema'
 import { CategoryHeaderSkeleton } from '@/components/category-header'
 import { CourseCard, CourseCardSkeleton } from '@/components/course-card'
 import { TopicPlayer, TopicPlayerSkeleton } from '@/components/topic-player'

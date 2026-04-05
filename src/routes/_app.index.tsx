@@ -6,7 +6,6 @@ import { ContentSection } from '@/components/content-section'
 import { Shell } from '@/components/shell'
 
 export const Route = createFileRoute('/_app/')({
-  loader: () => {},
   component: App,
 })
 

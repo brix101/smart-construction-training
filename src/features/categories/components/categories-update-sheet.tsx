@@ -1,3 +1,4 @@
+import type { CategoryUpdateInput } from '@/schema/category'
 import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -6,9 +7,6 @@ import { Loader } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { useCategoryRowAction } from '../state'
-import { CategoryForm } from './category-form'
-import type { CategoryUpdateInput} from '@/schema/category';
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -22,6 +20,8 @@ import {
 import { useTRPC } from '@/lib/trpc'
 import { categoryUpdateSchema } from '@/schema/category'
 
+import { useCategoryRowAction } from '../state'
+import { CategoryForm } from './category-form'
 
 export function CategoriesUpdateSheet() {
   const { rowAction, setRowAction } = useCategoryRowAction()

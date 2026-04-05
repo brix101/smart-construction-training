@@ -1,3 +1,5 @@
+import type { Category } from '@/server/db/schema'
+import type { TRPCRouterRecord } from '@trpc/server'
 import { TRPCError } from '@trpc/server'
 import {
   and,
@@ -12,11 +14,10 @@ import {
 } from 'drizzle-orm'
 import z from 'zod'
 
-import type { Category } from '@/server/db/schema'
-import type { TRPCRouterRecord } from '@trpc/server'
 import { pluralize } from '@/lib/pluralize'
 import { categoryCreateSchema, categoryUpdateSchema } from '@/schema/category'
 import { searchParamsSchema } from '@/schema/search'
+import { hasRole } from '@/server/common/clerk'
 import { categories, courseCategories } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
@@ -149,9 +150,7 @@ export const categoryRouter = {
   create: protectedProcedure
     .input(categoryCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      const role = ctx.session.sessionClaims.metadata.role
-
-      if (role !== 'admin') {
+      if (hasRole(ctx.session, 'admin')) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: "You don't have permission to create categories",
@@ -176,9 +175,7 @@ export const categoryRouter = {
   update: protectedProcedure
     .input(categoryUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      const role = ctx.session.sessionClaims.metadata.role
-
-      if (role !== 'admin') {
+      if (hasRole(ctx.session, 'admin')) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: "You don't have permission to update categories",
@@ -221,9 +218,7 @@ export const categoryRouter = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const role = ctx.session.sessionClaims.metadata.role
-
-      if (role !== 'admin') {
+      if (hasRole(ctx.session, 'admin')) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: "You don't have permission to delete categories",

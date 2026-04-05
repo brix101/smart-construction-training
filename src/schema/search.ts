@@ -1,3 +1,5 @@
+import type { User } from '@/features/users/types'
+import type { RouterOutput } from '@/server/trpc/router/_app'
 import {
   parseAsArrayOf,
   parseAsIndex,
@@ -6,8 +8,6 @@ import {
 } from 'nuqs'
 import * as z from 'zod'
 
-import type { User } from '@/features/users/types'
-import type { RouterOutput } from '@/server/trpc/router/_app'
 import { getSortingStateParser, sortingItemSchema } from '@/lib/parsers'
 
 export const searchParamsSchema = z.object({

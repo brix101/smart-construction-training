@@ -1,6 +1,6 @@
+import type { Topic } from '@/server/db/schema'
 import { useQuery } from '@tanstack/react-query'
 
-import type { Topic } from '@/server/db/schema'
 import { DownloadButton, UploadButton } from '@/components/material-button'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Card } from '@/components/ui/card'

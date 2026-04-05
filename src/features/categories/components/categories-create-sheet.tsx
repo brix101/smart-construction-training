@@ -1,3 +1,4 @@
+import type { CategoryCreateInput } from '@/schema/category'
 import React from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -6,8 +7,6 @@ import { CirclePlusIcon, Loader } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
-import { CategoryForm } from './category-form'
-import type { CategoryCreateInput} from '@/schema/category';
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -22,6 +21,7 @@ import {
 import { useTRPC } from '@/lib/trpc'
 import { categoryCreateSchema } from '@/schema/category'
 
+import { CategoryForm } from './category-form'
 
 export function CategoriesCreateSheet() {
   const [open, setOpen] = React.useState(false)
