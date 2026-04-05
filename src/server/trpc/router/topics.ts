@@ -49,7 +49,7 @@ export const topicsRouter = {
     .input(z.object({ query: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        const level = getMetadata(ctx.session).level
+        const meta = getMetadata(ctx.session).metadata
         const query = input.query
 
         const filteredTopics = await ctx.db
@@ -65,7 +65,7 @@ export const topicsRouter = {
           .innerJoin(courses, eq(courses.id, topics.courseId))
           .where(
             and(
-              lte(courses.level, level),
+              lte(courses.level, meta.level),
               eq(courses.isPublished, true),
               or(
                 ilike(courses.name, `%${query}%`),

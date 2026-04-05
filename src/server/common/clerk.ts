@@ -14,19 +14,47 @@ export const SessionMetadataSchema = z.object({
 
 export type SessionMetadata = z.infer<typeof SessionMetadataSchema>
 
+export type PermissionString = {
+  [K in keyof SessionMetadata]: `${K & string}:${SessionMetadata[K]}`
+}[keyof SessionMetadata]
+
 export const getMetadata = (session: SessionAuthObject) => {
-  return SessionMetadataSchema.parse(session.sessionClaims?.metadata ?? {})
-}
+  const meta = SessionMetadataSchema.parse(
+    session.sessionClaims?.metadata ?? {},
+  )
+  return {
+    metadata: meta,
+    /**
+     * Universal permission checker using a `key:value` string format.
+     * * - **Enums/Strings (e.g., role):** Requires an exact match.
+     * - **Numbers (e.g., level):** Acts as a minimum threshold (user level >= required level).
+     * * @param permission - A strongly typed permission string (e.g., "role:admin", "level:3").
+     * @returns `true` if the user meets the permission criteria, otherwise `false`.
+     * * @example
+     * const meta = getMetadata(session);
+     * meta.has("role:admin"); // true if role is exactly 'admin'
+     * meta.has("level:2");    // true if level is 2 or higher
+     */
+    has: (permission: PermissionString) => {
+      const match = /^(\w+):(.+)$/.exec(permission)
+      if (!match) return false
 
-export const hasRole = (session: SessionAuthObject, role: Role): boolean => {
-  return getMetadata(session).role === role
-}
+      const key = match[1] as keyof SessionMetadata
+      const item = match[2]
 
-export const hasLevel = (
-  session: SessionAuthObject,
-  level: number,
-): boolean => {
-  return getMetadata(session).level >= level
+      if (!(key in meta)) return false
+
+      if (key === 'level') {
+        const requiredLevel = Number(item)
+
+        if (Number.isNaN(requiredLevel)) return false
+
+        return meta.level >= requiredLevel
+      }
+
+      return String(meta[key]) === item
+    },
+  }
 }
 
 export const clerkClient = createClerkClient({

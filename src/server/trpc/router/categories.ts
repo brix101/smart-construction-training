@@ -17,7 +17,7 @@ import z from 'zod'
 import { pluralize } from '@/lib/pluralize'
 import { categoryCreateSchema, categoryUpdateSchema } from '@/schema/category'
 import { searchParamsSchema } from '@/schema/search'
-import { hasRole } from '@/server/common/clerk'
+import { getMetadata } from '@/server/common/clerk'
 import { categories, courseCategories } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
@@ -150,7 +150,9 @@ export const categoryRouter = {
   create: protectedProcedure
     .input(categoryCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      if (hasRole(ctx.session, 'admin')) {
+      const meta = getMetadata(ctx.session)
+
+      if (!meta.has('role:admin')) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: "You don't have permission to create categories",
@@ -175,7 +177,9 @@ export const categoryRouter = {
   update: protectedProcedure
     .input(categoryUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      if (hasRole(ctx.session, 'admin')) {
+      const meta = getMetadata(ctx.session)
+
+      if (!meta.has('role:admin')) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: "You don't have permission to update categories",
@@ -218,7 +222,9 @@ export const categoryRouter = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (hasRole(ctx.session, 'admin')) {
+      const meta = getMetadata(ctx.session)
+
+      if (!meta.has('role:admin')) {
         throw new TRPCError({
           code: 'UNAUTHORIZED',
           message: "You don't have permission to delete categories",
