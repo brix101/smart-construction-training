@@ -1,4 +1,4 @@
-import { Icons } from '@/components/icons'
+import type { Icons } from '@/components/icons'
 
 export interface NavItem {
   title: string
@@ -10,26 +10,26 @@ export interface NavItem {
 }
 
 export interface NavItemWithChildren extends NavItem {
-  items: NavItemWithChildren[]
+  items: Array<NavItemWithChildren>
 }
 
 export interface NavItemWithOptionalChildren extends NavItem {
-  items?: NavItemWithChildren[]
+  items?: Array<NavItemWithChildren>
 }
 
 export interface FooterItem {
   title: string
-  items: {
+  items: Array<{
     title: string
     href: string
     external?: boolean
-  }[]
+  }>
 }
 
 export type MainNavItem = NavItemWithOptionalChildren
 
 export type DashboardConfig = {
-  navItems: NavItemWithChildren[]
+  navItems: Array<NavItemWithChildren>
 }
 
 export interface Option {
@@ -46,7 +46,7 @@ export interface DataTableSearchableColumn<TData> {
 export interface DataTableFilterableColumn<
   TData,
 > extends DataTableSearchableColumn<TData> {
-  options: Option[]
+  options: Array<Option>
 }
 
 export type FileWithPreview = File & {
@@ -54,5 +54,5 @@ export type FileWithPreview = File & {
 }
 
 export interface SearchParams {
-  [key: string]: string | string[] | undefined
+  [key: string]: string | Array<string> | undefined
 }

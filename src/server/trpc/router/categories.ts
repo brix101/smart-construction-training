@@ -1,4 +1,4 @@
-import { TRPCError, TRPCRouterRecord } from '@trpc/server'
+import { TRPCError } from '@trpc/server'
 import {
   and,
   asc,
@@ -12,10 +12,12 @@ import {
 } from 'drizzle-orm'
 import z from 'zod'
 
+import type { Category } from '@/server/db/schema'
+import type { TRPCRouterRecord } from '@trpc/server'
 import { pluralize } from '@/lib/pluralize'
 import { categoryCreateSchema, categoryUpdateSchema } from '@/schema/category'
 import { searchParamsSchema } from '@/schema/search'
-import { categories, Category, courseCategories } from '@/server/db/schema'
+import { categories, courseCategories } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
 
 export const categoryRouter = {
@@ -147,7 +149,7 @@ export const categoryRouter = {
   create: protectedProcedure
     .input(categoryCreateSchema)
     .mutation(async ({ ctx, input }) => {
-      const role = ctx.session.user.publicMetadata?.role
+      const role = ctx.session.sessionClaims.metadata.role
 
       if (role !== 'admin') {
         throw new TRPCError({
@@ -174,7 +176,7 @@ export const categoryRouter = {
   update: protectedProcedure
     .input(categoryUpdateSchema)
     .mutation(async ({ ctx, input }) => {
-      const role = ctx.session.user.publicMetadata?.role
+      const role = ctx.session.sessionClaims.metadata.role
 
       if (role !== 'admin') {
         throw new TRPCError({
@@ -196,7 +198,7 @@ export const categoryRouter = {
       } catch (error) {
         if (
           error instanceof DrizzleQueryError &&
-          (error.cause as any)?.code === '23505'
+          (error.cause as unknown as { code?: string }).code === '23505'
         ) {
           throw new TRPCError({
             code: 'CONFLICT',
@@ -219,7 +221,7 @@ export const categoryRouter = {
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const role = ctx.session.user.publicMetadata?.role
+      const role = ctx.session.sessionClaims.metadata.role
 
       if (role !== 'admin') {
         throw new TRPCError({

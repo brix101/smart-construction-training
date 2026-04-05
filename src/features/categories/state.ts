@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 
-import { RouterOutput } from '@/server/trpc/router/_app'
-import { CategoryData } from '@/types/data'
-import { DataTableRowAction } from '@/types/data-table'
+import type { RouterOutput } from '@/server/trpc/router/_app'
+import type { CategoryData } from '@/types/data'
+import type { DataTableRowAction } from '@/types/data-table'
 
 interface CategoryRowActionState {
   rowAction: DataTableRowAction<CategoryData> | null

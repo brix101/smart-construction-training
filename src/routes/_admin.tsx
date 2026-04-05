@@ -1,5 +1,5 @@
 import { Protect, UserButton } from '@clerk/clerk-react'
-import { createFileRoute, Outlet, useRouterState } from '@tanstack/react-router'
+import { Outlet, createFileRoute, useRouterState } from '@tanstack/react-router'
 
 import { DashboardSideBar } from '@/components/dashboard-sidebar'
 import { ThemeToggle } from '@/components/theme-provider'

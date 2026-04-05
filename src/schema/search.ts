@@ -6,9 +6,9 @@ import {
 } from 'nuqs'
 import * as z from 'zod'
 
-import { User } from '@/features/users/types'
+import type { User } from '@/features/users/types'
+import type { RouterOutput } from '@/server/trpc/router/_app'
 import { getSortingStateParser, sortingItemSchema } from '@/lib/parsers'
-import { RouterOutput } from '@/server/trpc/router/_app'
 
 export const searchParamsSchema = z.object({
   page: z.number().default(1),

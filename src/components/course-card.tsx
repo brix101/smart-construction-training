@@ -38,7 +38,7 @@ export function CourseCard({ course, href, isDisabled }: CourseCardProps) {
           {course.imgSrc ? (
             <img
               src={course.imgSrc}
-              alt={course.name!}
+              alt={course.name}
               className="object-cover"
               sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw"
             />

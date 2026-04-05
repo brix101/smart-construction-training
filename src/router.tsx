@@ -4,10 +4,10 @@ import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 // Import the generated route tree
-import { queryClient, trpcClient, TRPCProvider } from '@/lib/trpc'
+import { routeTree } from './routeTree.gen'
+import { TRPCProvider, queryClient, trpcClient } from '@/lib/trpc'
 import AppClerkProvider from '@/providers/clerk-provider'
 
-import { routeTree } from './routeTree.gen'
 
 // Create a new router instance
 export const getRouter = () => {

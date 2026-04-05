@@ -1,7 +1,9 @@
 import React from 'react'
 import { SquarePen, Trash2, X } from 'lucide-react'
 
+import { useCategoryRowAction } from '../state'
 import type { Table } from '@tanstack/react-table'
+import type { CategoryData } from '@/types/data'
 import {
   ActionBar,
   ActionBarClose,
@@ -10,9 +12,7 @@ import {
   ActionBarSelection,
   ActionBarSeparator,
 } from '@/components/ui/action-bar'
-import { CategoryData } from '@/types/data'
 
-import { useCategoryRowAction } from '../state'
 
 interface ActionBarProps {
   table: Table<CategoryData>

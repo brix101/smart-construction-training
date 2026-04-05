@@ -1,5 +1,6 @@
 import { CalendarIcon, Ellipsis, TextIcon } from 'lucide-react'
 
+import type { User } from '../types'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -14,9 +15,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { formatDate, formatSignInDate } from '@/lib/format'
 
-import { User } from '../types'
 
-export const usersTableColumns: ColumnDef<User>[] = [
+export const usersTableColumns: Array<ColumnDef<User>> = [
   // {
   //   id: 'select',
   //   header: ({ table }) => (

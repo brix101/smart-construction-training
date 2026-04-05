@@ -32,7 +32,7 @@ type ItemElement = React.ComponentRef<typeof ActionBarItem>
 type CloseElement = React.ComponentRef<typeof ActionBarClose>
 
 function focusFirst(
-  candidates: React.RefObject<HTMLElement | null>[],
+  candidates: Array<React.RefObject<HTMLElement | null>>,
   preventScroll = false,
 ) {
   const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement
@@ -45,9 +45,9 @@ function focusFirst(
   }
 }
 
-function wrapArray<T>(array: T[], startIndex: number) {
+function wrapArray<T>(array: Array<T>, startIndex: number) {
   return array.map<T>(
-    (_, index) => array[(startIndex + index) % array.length] as T,
+    (_, index) => array[(startIndex + index) % array.length],
   )
 }
 
@@ -91,7 +91,7 @@ interface FocusContextValue {
   onFocusableItemRemove: () => void
   onItemRegister: (item: ItemData) => void
   onItemUnregister: (id: string) => void
-  getItems: () => ItemData[]
+  getItems: () => Array<ItemData>
 }
 
 const FocusContext = React.createContext<FocusContextValue | null>(null)
@@ -342,7 +342,7 @@ function ActionBarGroup(props: DivProps) {
 
           const candidateItems = [currentItem, ...items].filter(
             Boolean,
-          ) as ItemData[]
+          ) as Array<ItemData>
           const candidateRefs = candidateItems.map((item) => item.ref)
           focusFirst(candidateRefs, false)
         }

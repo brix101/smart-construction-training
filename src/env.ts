@@ -10,7 +10,6 @@ export const env = createEnv({
       .enum(['development', 'test', 'production'])
       .default('development'),
     DATABASE_URL: z.url(),
-    IS_ANALYTICS_ENABLED: z.coerce.boolean().default(false),
     CLERK_SECRET_KEY: z.string().min(1),
   },
 
@@ -29,6 +28,7 @@ export const env = createEnv({
    * What object holds the environment variables at runtime. This is usually
    * `process.env` or `import.meta.env`.
    */
+  // eslint-disable-next-line no-restricted-properties
   runtimeEnv: process.env,
 
   /**

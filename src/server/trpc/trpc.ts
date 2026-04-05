@@ -2,7 +2,7 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import z, { ZodError } from 'zod'
 
-import { TRPCContext } from './context'
+import type { TRPCContext } from './context'
 
 const t = initTRPC.context<TRPCContext>().create({
   transformer: superjson,
@@ -42,16 +42,14 @@ export const publicProcedure = t.procedure.use(timingMiddleware)
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
-    console.log(ctx.session?.user)
-
-    if (!ctx.session?.user) {
+    if (!ctx.session?.isAuthenticated) {
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
+        session: { ...ctx.session },
       },
     })
   })

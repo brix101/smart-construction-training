@@ -1,6 +1,8 @@
 import { CalendarIcon, Ellipsis, TextIcon } from 'lucide-react'
 
+import { useCategoryPreview, useCategoryRowAction } from '../state'
 import type { ColumnDef } from '@tanstack/react-table'
+import type { RouterOutput } from '@/server/trpc/router/_app'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Button } from '@/components/ui/button'
@@ -16,15 +18,13 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { formatDate } from '@/lib/format'
 import { getRandomPatternStyle } from '@/lib/generate-pattern'
-import { RouterOutput } from '@/server/trpc/router/_app'
 
-import { useCategoryPreview, useCategoryRowAction } from '../state'
 
 type ColumnType = RouterOutput['categories']['list']['items'][0]
 
 interface GetCategoriesTableColumnsProps {}
 
-export function getCategoriesTableColumns({}: GetCategoriesTableColumnsProps): ColumnDef<ColumnType>[] {
+export function getCategoriesTableColumns({}: GetCategoriesTableColumnsProps): Array<ColumnDef<ColumnType>> {
   return [
     {
       id: 'select',

@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 
+import type { Course } from '@/server/db/schema'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -11,7 +12,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { getRandomPatternStyle } from '@/lib/generate-pattern'
 import { cn } from '@/lib/utils'
-import { Course } from '@/server/db/schema'
 
 interface DashboardCourseCardProps {
   course: Partial<Course>

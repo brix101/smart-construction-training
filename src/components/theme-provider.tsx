@@ -58,12 +58,12 @@ const setupPreferredListener = () => {
 }
 
 const getNextTheme = (current: ThemeMode): ThemeMode => {
-  const themes: ThemeMode[] =
+  const themes: Array<ThemeMode> =
     getSystemTheme() === 'dark'
       ? ['auto', 'light', 'dark']
       : ['auto', 'dark', 'light']
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return themes[(themes.indexOf(current) + 1) % themes.length]!
+   
+  return themes[(themes.indexOf(current) + 1) % themes.length]
 }
 
 export const themeDetectorScript = (function () {

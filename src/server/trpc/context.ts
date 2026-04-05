@@ -1,15 +1,15 @@
+import { auth } from '@clerk/tanstack-react-start/server'
+
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
 import { clerkClient } from '@/server/common/clerk'
-import { getAuth } from '@/server/common/get-auth'
 import { db } from '@/server/db'
 
-export const createContext = async (opts: FetchCreateContextFnOptions) => {
+export const createContext = async (_opts: FetchCreateContextFnOptions) => {
   try {
-    console.log('[createContext]', opts.req)
-    const user = await getAuth(opts.req)
+    const session = await auth()
 
     return {
-      session: { user },
+      session,
       clerkClient,
       db,
     }

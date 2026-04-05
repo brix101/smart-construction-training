@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -6,24 +6,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/table'
+import { cn } from '@/lib/utils'
 
-interface DataTableSkeletonProps extends React.ComponentProps<"div"> {
-  columnCount: number;
-  rowCount?: number;
-  filterCount?: number;
-  cellWidths?: string[];
-  withViewOptions?: boolean;
-  withPagination?: boolean;
-  shrinkZero?: boolean;
+interface DataTableSkeletonProps extends React.ComponentProps<'div'> {
+  columnCount: number
+  rowCount?: number
+  filterCount?: number
+  cellWidths?: Array<string>
+  withViewOptions?: boolean
+  withPagination?: boolean
+  shrinkZero?: boolean
 }
 
 export function DataTableSkeleton({
   columnCount,
   rowCount = 10,
   filterCount = 0,
-  cellWidths = ["auto"],
+  cellWidths = ['auto'],
   withViewOptions = true,
   withPagination = true,
   shrinkZero = false,
@@ -32,12 +32,12 @@ export function DataTableSkeleton({
 }: DataTableSkeletonProps) {
   const cozyCellWidths = Array.from(
     { length: columnCount },
-    (_, index) => cellWidths[index % cellWidths.length] ?? "auto",
-  );
+    (_, index) => cellWidths[index % cellWidths.length] ?? 'auto',
+  )
 
   return (
     <div
-      className={cn("flex w-full flex-col gap-2.5 overflow-auto", className)}
+      className={cn('flex w-full flex-col gap-2.5 overflow-auto', className)}
       {...props}
     >
       <div className="flex w-full items-center justify-between gap-2 overflow-auto p-1">
@@ -57,12 +57,12 @@ export function DataTableSkeleton({
           <TableHeader>
             {Array.from({ length: 1 }).map((_, i) => (
               <TableRow key={i} className="hover:bg-transparent">
-                {Array.from({ length: columnCount }).map((_, j) => (
+                {Array.from({ length: columnCount }).map((_j, j) => (
                   <TableHead
                     key={j}
                     style={{
                       width: cozyCellWidths[j],
-                      minWidth: shrinkZero ? cozyCellWidths[j] : "auto",
+                      minWidth: shrinkZero ? cozyCellWidths[j] : 'auto',
                     }}
                   >
                     <Skeleton className="h-6 w-full" />
@@ -74,12 +74,12 @@ export function DataTableSkeleton({
           <TableBody>
             {Array.from({ length: rowCount }).map((_, i) => (
               <TableRow key={i} className="hover:bg-transparent">
-                {Array.from({ length: columnCount }).map((_, j) => (
+                {Array.from({ length: columnCount }).map((_j, j) => (
                   <TableCell
                     key={j}
                     style={{
                       width: cozyCellWidths[j],
-                      minWidth: shrinkZero ? cozyCellWidths[j] : "auto",
+                      minWidth: shrinkZero ? cozyCellWidths[j] : 'auto',
                     }}
                   >
                     <Skeleton className="h-6 w-full" />
@@ -98,7 +98,7 @@ export function DataTableSkeleton({
               <Skeleton className="h-7 w-24" />
               <Skeleton className="h-7 w-18" />
             </div>
-            <div className="flex items-center justify-center font-medium text-sm">
+            <div className="flex items-center justify-center text-sm font-medium">
               <Skeleton className="h-7 w-20" />
             </div>
             <div className="flex items-center gap-2">
@@ -111,5 +111,5 @@ export function DataTableSkeleton({
         </div>
       ) : null}
     </div>
-  );
+  )
 }

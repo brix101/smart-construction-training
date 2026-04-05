@@ -1,3 +1,4 @@
+import type { Category } from '@/server/db/schema'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +9,6 @@ import {
 } from '@/components/ui/breadcrumb'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Category } from '@/server/db/schema'
 
 interface CourseHeaderProps {
   category: Category

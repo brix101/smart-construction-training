@@ -4,7 +4,7 @@ import type { Material } from '@/server/db/schema'
 import { Button } from '@/components/ui/button'
 
 interface TopicButtonProps {
-  materials: { material: Material }[]
+  materials: Array<{ material: Material }>
 }
 
 export function DownloadButton({ materials }: TopicButtonProps) {

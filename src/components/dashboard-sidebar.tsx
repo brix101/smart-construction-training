@@ -67,7 +67,7 @@ export function DashboardSideBar() {
                           'bg-sidebar-accent font-medium text-sidebar-accent-foreground',
                       }}
                     >
-                      {Icon && <Icon />}
+                      <Icon />
                       {item.title}
                     </Link>
                   </SidebarMenuButton>

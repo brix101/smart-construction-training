@@ -1,4 +1,3 @@
-import type { SingleParser, UseQueryStateOptions } from 'nuqs'
 import * as React from 'react'
 import {
   getCoreRowModel,
@@ -17,6 +16,7 @@ import {
   useQueryState,
   useQueryStates,
 } from 'nuqs'
+import type { SingleParser, UseQueryStateOptions } from 'nuqs'
 
 import type {
   ColumnFiltersState,
@@ -28,9 +28,9 @@ import type {
   Updater,
   VisibilityState,
 } from '@tanstack/react-table'
+import type { ExtendedColumnSort, QueryKeys } from '@/types/data-table'
 import { useDebouncedCallback } from '@/hooks/use-debounced-callback'
 import { getSortingStateParser } from '@/lib/parsers'
-import { ExtendedColumnSort, QueryKeys } from '@/types/data-table'
 
 const PAGE_KEY = 'page'
 const PER_PAGE_KEY = 'perPage'
@@ -54,7 +54,7 @@ interface UseDataTableProps<TData>
     >,
     Required<Pick<TableOptions<TData>, 'pageCount'>> {
   initialState?: Omit<Partial<TableState>, 'sorting'> & {
-    sorting?: ExtendedColumnSort<TData>[]
+    sorting?: Array<ExtendedColumnSort<TData>>
   }
   queryKeys?: Partial<QueryKeys>
   history?: 'push' | 'replace'
@@ -152,7 +152,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 
   const columnIds = React.useMemo(() => {
     return new Set(
-      columns.map((column) => column.id).filter(Boolean) as string[],
+      columns.map((column) => column.id).filter(Boolean) as Array<string>,
     )
   }, [columns])
 
@@ -167,9 +167,9 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     (updaterOrValue: Updater<SortingState>) => {
       if (typeof updaterOrValue === 'function') {
         const newSorting = updaterOrValue(sorting)
-        setSorting(newSorting as ExtendedColumnSort<TData>[])
+        setSorting(newSorting as Array<ExtendedColumnSort<TData>>)
       } else {
-        setSorting(updaterOrValue as ExtendedColumnSort<TData>[])
+        setSorting(updaterOrValue as Array<ExtendedColumnSort<TData>>)
       }
     },
     [sorting, setSorting],
@@ -185,7 +185,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
     if (enableAdvancedFilter) return {}
 
     return filterableColumns.reduce<
-      Record<string, SingleParser<string> | SingleParser<string[]>>
+      Record<string, SingleParser<string> | SingleParser<Array<string>>>
     >((acc, column) => {
       if (column.meta?.options) {
         acc[column.id ?? ''] = parseAsArrayOf(
@@ -246,10 +246,10 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
             : updaterOrValue
 
         const filterUpdates = next.reduce<
-          Record<string, string | string[] | null>
+          Record<string, string | Array<string> | null>
         >((acc, filter) => {
           if (filterableColumns.find((column) => column.id === filter.id)) {
-            acc[filter.id] = filter.value as string | string[]
+            acc[filter.id] = filter.value as string | Array<string>
           }
           return acc
         }, {})

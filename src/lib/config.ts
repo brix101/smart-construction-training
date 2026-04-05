@@ -18,7 +18,7 @@ export const siteConfig = {
         },
       ],
     },
-  ] satisfies MainNavItem[],
+  ] satisfies Array<MainNavItem>,
 }
 
 export const dashboardConfig: DashboardConfig = {

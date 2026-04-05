@@ -1,4 +1,4 @@
-import { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
+import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 
 import { categoryRouter } from '@/server/trpc/router/categories'
 import { coursesRouter } from '@/server/trpc/router/courses'

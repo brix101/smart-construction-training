@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 
+import type { Topic } from '@/server/db/schema'
 import { DownloadButton, UploadButton } from '@/components/material-button'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTRPC } from '@/lib/trpc'
 import { getYouTubeId } from '@/lib/youtube'
-import { Topic } from '@/server/db/schema'
 
 interface TopicPlayerProps {
   topicId: Topic['id']

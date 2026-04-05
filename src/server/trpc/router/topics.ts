@@ -1,10 +1,11 @@
-import { TRPCError, TRPCRouterRecord } from '@trpc/server'
+import { TRPCError } from '@trpc/server'
 import { and, asc, eq, ilike, lte, or, sql } from 'drizzle-orm'
 import z from 'zod'
 
+import type { TopicGroup } from '@/types/topic'
+import type { TRPCRouterRecord } from '@trpc/server'
 import { courses, topics } from '@/server/db/schema'
 import { protectedProcedure } from '@/server/trpc/trpc'
-import { TopicGroup } from '@/types/topic'
 
 type GroupedTopics = Record<string, TopicGroup>
 
@@ -47,7 +48,7 @@ export const topicsRouter = {
     .input(z.object({ query: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        const level = Number(ctx.session.user.publicMetadata.level || 0)
+        const level = Number(ctx.session.sessionClaims.metadata.level || 0)
         const query = input.query
 
         const filteredTopics = await ctx.db
@@ -74,14 +75,19 @@ export const topicsRouter = {
           .orderBy(asc(topics.name))
           .limit(10)
 
-        const groupedByCourse = filteredTopics.reduce((result, item) => {
-          const { courseId, course, ...rest } = item
-          if (!result[courseId]) {
-            result[courseId] = { courseId, course, topics: [] }
-          }
-          result[courseId].topics.push(rest)
-          return result
-        }, {} as GroupedTopics)
+        const groupedByCourse = filteredTopics.reduce<Partial<GroupedTopics>>(
+          (acc, curr) => {
+            const { courseId, course, ...rest } = curr
+
+            if (!acc[courseId]) {
+              acc[courseId] = { courseId, course, topics: [] }
+            }
+
+            acc[courseId].topics.push(rest)
+            return acc
+          },
+          {},
+        )
 
         return Object.values(groupedByCourse)
       } catch (error) {

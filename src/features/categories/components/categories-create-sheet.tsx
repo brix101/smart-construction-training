@@ -6,6 +6,8 @@ import { CirclePlusIcon, Loader } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
+import { CategoryForm } from './category-form'
+import type { CategoryCreateInput} from '@/schema/category';
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -18,9 +20,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { useTRPC } from '@/lib/trpc'
-import { CategoryCreateInput, categoryCreateSchema } from '@/schema/category'
+import { categoryCreateSchema } from '@/schema/category'
 
-import { CategoryForm } from './category-form'
 
 export function CategoriesCreateSheet() {
   const [open, setOpen] = React.useState(false)

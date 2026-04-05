@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 
+import type { RouterOutput } from '@/server/trpc/router/_app'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import {
   Card,
@@ -9,7 +10,6 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getRandomPatternStyle } from '@/lib/generate-pattern'
-import { RouterOutput } from '@/server/trpc/router/_app'
 
 interface CategoryCardProps {
   category: RouterOutput['categories']['getAll'][0]

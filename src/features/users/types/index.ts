@@ -1,4 +1,4 @@
-import { User as ClerkUser } from '@clerk/backend'
+import type { User as ClerkUser } from '@clerk/backend'
 
 export type User = Pick<
   ClerkUser,

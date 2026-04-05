@@ -1,17 +1,17 @@
 import {
   Protect,
+  SignInButton,
   SignedIn,
   SignedOut,
-  SignInButton,
   UserButton,
 } from '@clerk/clerk-react'
 import { LayoutDashboardIcon, Users } from 'lucide-react'
 
+import { MainNav } from './main-nav'
 import { ThemeToggle } from '@/components/theme-provider'
 import { usePermissions } from '@/hooks/use-permissions'
 import { siteConfig } from '@/lib/config'
 
-import { MainNav } from './main-nav'
 
 export function SiteHeader() {
   const { has } = usePermissions()

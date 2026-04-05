@@ -1,8 +1,8 @@
-import { TRPCError, TRPCRouterRecord } from '@trpc/server'
+import { TRPCError } from '@trpc/server'
 
+import type { TRPCRouterRecord } from '@trpc/server'
 import { searchParamsSchema } from '@/schema/search'
-
-import { protectedProcedure } from '../trpc'
+import { protectedProcedure } from '@/server/trpc/trpc'
 
 type AllowedOrderBy =
   | '+created_at'
@@ -27,20 +27,17 @@ export const usersRouter = {
             break
         }
 
-        const result = await ctx.clerkClient?.users.getUserList({
+        const { data, totalCount } = await ctx.clerkClient.users.getUserList({
           limit,
           offset,
           query,
           orderBy,
         })
 
-        const items = result?.data ?? []
-        const count = result?.totalCount ?? 0
-
         return {
-          items,
-          count,
-          pageCount: Math.ceil(count / limit),
+          items: data,
+          count: totalCount,
+          pageCount: Math.ceil(totalCount / limit),
         }
       } catch (error) {
         throw new TRPCError({

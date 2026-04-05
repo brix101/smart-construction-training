@@ -1,8 +1,8 @@
 import { DialogTitle } from '@radix-ui/react-dialog'
 
+import { useCategoryPreview } from '../state'
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 
-import { useCategoryPreview } from '../state'
 
 export function CategoriesImagePreview() {
   const { item, setItem } = useCategoryPreview()

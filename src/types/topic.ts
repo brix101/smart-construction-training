@@ -1,7 +1,7 @@
-import { Course, Topic } from '@/server/db/schema'
+import type { Course, Topic } from '@/server/db/schema'
 
 export interface TopicGroup {
   courseId: Course['id']
   course: Course['name']
-  topics: Pick<Topic, 'id' | 'name'>[]
+  topics: Array<Pick<Topic, 'id' | 'name'>>
 }

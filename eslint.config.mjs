@@ -16,6 +16,8 @@ const eslintConfig = [
   ...tseslint.configs.recommended,
   ...compat.config({
     rules: {
+      'sort-imports': 'off',
+      'import/order': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },

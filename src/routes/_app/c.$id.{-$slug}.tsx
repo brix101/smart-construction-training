@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { ArrowLeft, PlayIcon } from 'lucide-react'
 import z from 'zod'
 
+import type { Course } from '@/server/db/schema'
 import { CategoryHeaderSkeleton } from '@/components/category-header'
 import { CourseCard, CourseCardSkeleton } from '@/components/course-card'
 import { TopicPlayer, TopicPlayerSkeleton } from '@/components/topic-player'
@@ -19,7 +20,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { Course } from '@/server/db/schema'
 
 const searchSchema = z.object({
   topic: z.string().optional(),
@@ -138,7 +138,7 @@ function CourseContainer({ course }: { course: Course }) {
 
   const { trpc } = Route.useRouteContext()
   const { data, isLoading } = useQuery(
-    trpc.topics.getByCourseId.queryOptions({ courseId: course.id! }),
+    trpc.topics.getByCourseId.queryOptions({ courseId: course.id }),
   )
 
   const topics = data || []

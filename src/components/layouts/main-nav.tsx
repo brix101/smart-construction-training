@@ -5,7 +5,7 @@ import { Icons } from '@/components/icons'
 import { siteConfig } from '@/lib/config'
 
 interface MainNavProps {
-  items?: MainNavItem[]
+  items?: Array<MainNavItem>
 }
 
 export function MainNav({ items }: MainNavProps) {

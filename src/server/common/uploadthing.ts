@@ -1,7 +1,6 @@
 import type { FileRouter } from 'uploadthing/server'
+import { auth } from '@clerk/tanstack-react-start/server'
 import { createUploadthing, UploadThingError } from 'uploadthing/server'
-
-import { getAuth } from './get-auth'
 
 const f = createUploadthing()
 
@@ -19,17 +18,18 @@ export const uploadRouter = {
     },
   })
     // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
-      const user = await getAuth(req)
+      // const user = await getAuth(req)
+      const { isAuthenticated, userId } = await auth()
 
       // If you throw, the user will not be able to upload
-      if (!user) throw new UploadThingError('Unauthorized')
+      if (!isAuthenticated) throw new UploadThingError('Unauthorized')
 
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user.id }
+      return { userId }
     })
-    .onUploadComplete(async ({ metadata, file }) => {
+    .onUploadComplete(({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload
       console.log('Upload complete for userId:', metadata.userId)
 
