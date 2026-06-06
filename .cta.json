@@ -1,0 +1,24 @@
+{
+  "projectName": "sctc",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "npm",
+  "includeExamples": true,
+  "tailwind": true,
+  "addOnOptions": {},
+  "envVarValues": {
+    "VITE_CLERK_PUBLISHABLE_KEY": "pk_test_c2V0dGxpbmctZ29vc2UtNzUuY2xlcmsuYWNjb3VudHMuZGV2JA"
+  },
+  "git": false,
+  "install": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "cloudflare",
+    "clerk",
+    "table",
+    "tanstack-query",
+    "form"
+  ]
+}

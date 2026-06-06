@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sctc",
+  "compatibility_date": "2026-06-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./src/server.ts",
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+  },
+  "env": {
+    "production": {
+      "vars": {
+        "ENVIRONMENT": "production",
+        // Note: Do NOT put DATABASE_URL here if it has a password!
+      },
+    },
+  },
+}
