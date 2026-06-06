@@ -6,8 +6,6 @@ export const getAuthState = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { isAuthenticated } = await context.auth();
 
-    console.log("hello", context.hello);
-
     if (!isAuthenticated) {
       throw redirect({
         replace: true,

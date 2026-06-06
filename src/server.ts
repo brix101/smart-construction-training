@@ -6,6 +6,9 @@ import * as Effect from "effect/Effect";
 import * as Exit from "effect/Exit";
 import * as Layer from "effect/Layer";
 
+import { Database } from "./server/Database";
+import { makeLoggerLayer } from "./server/LayerEx";
+
 /**
  * Runs an Effect within the full app layer for HTTP request handlers (fetch,
  * server functions), converting failures to throwable values compatible with
@@ -37,40 +40,35 @@ import * as Layer from "effect/Layer";
  * server context that would otherwise be lost after `ShallowErrorPlugin`
  * strips everything except `.message`.
  */
-// const makeRunEffect = (request: Request, env: Env) => {
-//   // const requestLayer = Layer.succeedContext(Context.make(AppRequest, request))
-//   // const authLayer = Layer.provideMerge(Auth.layer, Database.layer)
-//   //
-//   // const authRequestLayer = Layer.merge(authLayer, requestLayer)
-//   // const runtimeLayer = Layer.merge(authRequestLayer, makeLoggerLayer(env))
-//   const runtimeLayer = Layer;
-//
-//   return async <TValue, TError>(
-//     effect: Effect.Effect<TValue, TError, Layer.Success<typeof runtimeLayer>>,
-//   ): Promise<TValue> => {
-//     const exit = await Effect.runPromiseExit(Effect.provide(effect, runtimeLayer));
-//
-//     if (Exit.isSuccess(exit)) {
-//       return exit.value;
-//     }
-//
-//     const squashed = Cause.squash(exit.cause);
-//     if (isRedirect(squashed) || isNotFound(squashed)) {
-//       throw squashed;
-//     }
-//
-//     if (squashed instanceof Error) {
-//       if (Cause.isUnknownError(squashed) && squashed.cause instanceof Error) {
-//         squashed.message = squashed.cause.message;
-//       } else if (!squashed.message) {
-//         squashed.message = Cause.pretty(exit.cause);
-//       }
-//
-//       throw squashed;
-//     }
-//     throw new Error(Cause.pretty(exit.cause));
-//   };
-// };
+const makeRunEffect = (env: Env) => {
+  const runtimeLayer = Layer.merge(Database.layer, makeLoggerLayer(env));
+
+  return async <TValue, TError>(
+    effect: Effect.Effect<TValue, TError, Layer.Success<typeof runtimeLayer>>,
+  ): Promise<TValue> => {
+    const exit = await Effect.runPromiseExit(Effect.provide(effect, runtimeLayer));
+
+    if (Exit.isSuccess(exit)) {
+      return exit.value;
+    }
+
+    const squashed = Cause.squash(exit.cause);
+    if (isRedirect(squashed) || isNotFound(squashed)) {
+      throw squashed;
+    }
+
+    if (squashed instanceof Error) {
+      if (Cause.isUnknownError(squashed) && squashed.cause instanceof Error) {
+        squashed.message = squashed.cause.message;
+      } else if (!squashed.message) {
+        squashed.message = Cause.pretty(exit.cause);
+      }
+
+      throw squashed;
+    }
+    throw new Error(Cause.pretty(exit.cause));
+  };
+};
 
 /**
  * Per-request context injected by `handler.fetch` and typed via Start's
@@ -95,17 +93,17 @@ import * as Layer from "effect/Layer";
  */
 export interface ServerContext {
   auth: typeof auth;
-  hello: string;
-  foo: number;
+  env: Env;
+  runEffect: ReturnType<typeof makeRunEffect>;
 }
 
 export default createServerEntry({
-  async fetch(request) {
-    return handler.fetch(request, {
-      context: {
-        hello: "world",
-        foo: 123,
-      } as ServerContext,
-    });
+  async fetch(request, env) {
+    // console.log(`[${new Date().toISOString()}] fetch: ${request.url}`);
+
+    const convertedEnv = env as unknown as Env;
+    const runEffect = makeRunEffect(convertedEnv);
+
+    return handler.fetch(request, { context: { env: convertedEnv, runEffect } as ServerContext });
   },
 });
