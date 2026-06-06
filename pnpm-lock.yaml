@@ -105,6 +105,9 @@ importers:
         specifier: ^4.3.6
         version: 4.4.3
     devDependencies:
+      '@effect/language-service':
+        specifier: ^0.86.2
+        version: 0.86.2
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.19(tailwindcss@4.3.0)
@@ -497,6 +500,10 @@ packages:
         optional: true
       lmdb:
         optional: true
+
+  '@effect/language-service@0.86.2':
+    resolution: {integrity: sha512-SaPln+8srOqDJDUwNTDmP5e+IYpEDr9+1epGznnsLqu8xvo6VnxyWARdeLpqvZJlb0Pgy9ca7ppqvvdWbHPXAg==}
+    hasBin: true
 
   '@effect/platform@0.96.1':
     resolution: {integrity: sha512-cjB1QZZYEP8JXCFNGvBLVi0T6YUBQTmOVEUA3SDbiQ6RUO+p6CE3eyD2vMWmrz5nE8yY5QSAuOV9v0boEcUv+A==}
@@ -4945,6 +4952,8 @@ snapshots:
       '@effect/platform': 0.96.1(effect@4.0.0-beta.78)
       effect: 4.0.0-beta.78
       uuid: 11.1.1
+
+  '@effect/language-service@0.86.2': {}
 
   '@effect/platform@0.96.1(effect@4.0.0-beta.78)':
     dependencies:
