@@ -28,5 +28,13 @@ export const Route = createFileRoute("/_app")({
       },
     });
   },
-  component: Outlet,
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  return (
+    <section className="container mx-auto">
+      <Outlet />
+    </section>
+  );
+}

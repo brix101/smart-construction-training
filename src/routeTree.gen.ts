@@ -20,7 +20,7 @@ import { Route as AuthSignInRouteImport } from './routes/_auth.sign-in'
 import { Route as AppCoursesRouteImport } from './routes/_app.courses'
 import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
 import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
-import { Route as AppCoursesIdRouteImport } from './routes/_app.courses.$id'
+import { Route as AppCCourseIdRouteImport } from './routes/_app.c.$courseId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -75,33 +75,33 @@ const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
   path: '/demo/form/address',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppCoursesIdRoute = AppCoursesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AppCoursesRoute,
+const AppCCourseIdRoute = AppCCourseIdRouteImport.update({
+  id: '/c/$courseId',
+  path: '/c/$courseId',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
-  '/courses': typeof AppCoursesRouteWithChildren
+  '/courses': typeof AppCoursesRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/courses/$id': typeof AppCoursesIdRoute
+  '/c/$courseId': typeof AppCCourseIdRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
-  '/courses': typeof AppCoursesRouteWithChildren
+  '/courses': typeof AppCoursesRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/courses/$id': typeof AppCoursesIdRoute
+  '/c/$courseId': typeof AppCCourseIdRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
 }
@@ -109,14 +109,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
-  '/_app/courses': typeof AppCoursesRouteWithChildren
+  '/_app/courses': typeof AppCoursesRoute
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/_app/': typeof AppIndexRoute
-  '/_app/courses/$id': typeof AppCoursesIdRoute
+  '/_app/c/$courseId': typeof AppCCourseIdRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
 }
@@ -130,7 +130,7 @@ export interface FileRouteTypes {
     | '/demo/clerk'
     | '/demo/table'
     | '/demo/tanstack-query'
-    | '/courses/$id'
+    | '/c/$courseId'
     | '/demo/form/address'
     | '/demo/form/simple'
   fileRoutesByTo: FileRoutesByTo
@@ -142,7 +142,7 @@ export interface FileRouteTypes {
     | '/demo/clerk'
     | '/demo/table'
     | '/demo/tanstack-query'
-    | '/courses/$id'
+    | '/c/$courseId'
     | '/demo/form/address'
     | '/demo/form/simple'
   id:
@@ -156,7 +156,7 @@ export interface FileRouteTypes {
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/_app/'
-    | '/_app/courses/$id'
+    | '/_app/c/$courseId'
     | '/demo/form/address'
     | '/demo/form/simple'
   fileRoutesById: FileRoutesById
@@ -250,36 +250,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoFormAddressRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/courses/$id': {
-      id: '/_app/courses/$id'
-      path: '/$id'
-      fullPath: '/courses/$id'
-      preLoaderRoute: typeof AppCoursesIdRouteImport
-      parentRoute: typeof AppCoursesRoute
+    '/_app/c/$courseId': {
+      id: '/_app/c/$courseId'
+      path: '/c/$courseId'
+      fullPath: '/c/$courseId'
+      preLoaderRoute: typeof AppCCourseIdRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
-interface AppCoursesRouteChildren {
-  AppCoursesIdRoute: typeof AppCoursesIdRoute
-}
-
-const AppCoursesRouteChildren: AppCoursesRouteChildren = {
-  AppCoursesIdRoute: AppCoursesIdRoute,
-}
-
-const AppCoursesRouteWithChildren = AppCoursesRoute._addFileChildren(
-  AppCoursesRouteChildren,
-)
-
 interface AppRouteChildren {
-  AppCoursesRoute: typeof AppCoursesRouteWithChildren
+  AppCoursesRoute: typeof AppCoursesRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppCCourseIdRoute: typeof AppCCourseIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppCoursesRoute: AppCoursesRouteWithChildren,
+  AppCoursesRoute: AppCoursesRoute,
   AppIndexRoute: AppIndexRoute,
+  AppCCourseIdRoute: AppCCourseIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
