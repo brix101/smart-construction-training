@@ -17,10 +17,9 @@ import { Route as DemoTableRouteImport } from './routes/demo/table'
 import { Route as DemoClerkRouteImport } from './routes/demo/clerk'
 import { Route as AuthSignUpRouteImport } from './routes/_auth.sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth.sign-in'
-import { Route as AppCoursesRouteImport } from './routes/_app.courses'
-import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
-import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
+import { Route as AppAindexRouteImport } from './routes/_app.aindex'
 import { Route as AppCCourseIdRouteImport } from './routes/_app.c.$courseId'
+import { Route as AppCCourseIdTopicIdRouteImport } from './routes/_app.c.$courseId.$topicId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -60,96 +59,86 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => AuthRoute,
 } as any)
-const AppCoursesRoute = AppCoursesRouteImport.update({
-  id: '/courses',
-  path: '/courses',
+const AppAindexRoute = AppAindexRouteImport.update({
+  id: '/aindex',
+  path: '/aindex',
   getParentRoute: () => AppRoute,
-} as any)
-const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
-  id: '/demo/form/simple',
-  path: '/demo/form/simple',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
-  id: '/demo/form/address',
-  path: '/demo/form/address',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const AppCCourseIdRoute = AppCCourseIdRouteImport.update({
   id: '/c/$courseId',
   path: '/c/$courseId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCCourseIdTopicIdRoute = AppCCourseIdTopicIdRouteImport.update({
+  id: '/$topicId',
+  path: '/$topicId',
+  getParentRoute: () => AppCCourseIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
-  '/courses': typeof AppCoursesRoute
+  '/aindex': typeof AppAindexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/c/$courseId': typeof AppCCourseIdRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
+  '/c/$courseId': typeof AppCCourseIdRouteWithChildren
+  '/c/$courseId/$topicId': typeof AppCCourseIdTopicIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
-  '/courses': typeof AppCoursesRoute
+  '/aindex': typeof AppAindexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/c/$courseId': typeof AppCCourseIdRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
+  '/c/$courseId': typeof AppCCourseIdRouteWithChildren
+  '/c/$courseId/$topicId': typeof AppCCourseIdTopicIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
-  '/_app/courses': typeof AppCoursesRoute
+  '/_app/aindex': typeof AppAindexRoute
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/table': typeof DemoTableRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/_app/': typeof AppIndexRoute
-  '/_app/c/$courseId': typeof AppCCourseIdRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
+  '/_app/c/$courseId': typeof AppCCourseIdRouteWithChildren
+  '/_app/c/$courseId/$topicId': typeof AppCCourseIdTopicIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/courses'
+    | '/aindex'
     | '/sign-in'
     | '/sign-up'
     | '/demo/clerk'
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/c/$courseId'
-    | '/demo/form/address'
-    | '/demo/form/simple'
+    | '/c/$courseId/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/courses'
+    | '/aindex'
     | '/sign-in'
     | '/sign-up'
     | '/demo/clerk'
     | '/demo/table'
     | '/demo/tanstack-query'
     | '/c/$courseId'
-    | '/demo/form/address'
-    | '/demo/form/simple'
+    | '/c/$courseId/$topicId'
   id:
     | '__root__'
     | '/_app'
     | '/_auth'
-    | '/_app/courses'
+    | '/_app/aindex'
     | '/_auth/sign-in'
     | '/_auth/sign-up'
     | '/demo/clerk'
@@ -157,8 +146,7 @@ export interface FileRouteTypes {
     | '/demo/tanstack-query'
     | '/_app/'
     | '/_app/c/$courseId'
-    | '/demo/form/address'
-    | '/demo/form/simple'
+    | '/_app/c/$courseId/$topicId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -167,8 +155,6 @@ export interface RootRouteChildren {
   DemoClerkRoute: typeof DemoClerkRoute
   DemoTableRoute: typeof DemoTableRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  DemoFormAddressRoute: typeof DemoFormAddressRoute
-  DemoFormSimpleRoute: typeof DemoFormSimpleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -229,26 +215,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_app/courses': {
-      id: '/_app/courses'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof AppCoursesRouteImport
+    '/_app/aindex': {
+      id: '/_app/aindex'
+      path: '/aindex'
+      fullPath: '/aindex'
+      preLoaderRoute: typeof AppAindexRouteImport
       parentRoute: typeof AppRoute
-    }
-    '/demo/form/simple': {
-      id: '/demo/form/simple'
-      path: '/demo/form/simple'
-      fullPath: '/demo/form/simple'
-      preLoaderRoute: typeof DemoFormSimpleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/form/address': {
-      id: '/demo/form/address'
-      path: '/demo/form/address'
-      fullPath: '/demo/form/address'
-      preLoaderRoute: typeof DemoFormAddressRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/_app/c/$courseId': {
       id: '/_app/c/$courseId'
@@ -257,19 +229,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCCourseIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/c/$courseId/$topicId': {
+      id: '/_app/c/$courseId/$topicId'
+      path: '/$topicId'
+      fullPath: '/c/$courseId/$topicId'
+      preLoaderRoute: typeof AppCCourseIdTopicIdRouteImport
+      parentRoute: typeof AppCCourseIdRoute
+    }
   }
 }
 
+interface AppCCourseIdRouteChildren {
+  AppCCourseIdTopicIdRoute: typeof AppCCourseIdTopicIdRoute
+}
+
+const AppCCourseIdRouteChildren: AppCCourseIdRouteChildren = {
+  AppCCourseIdTopicIdRoute: AppCCourseIdTopicIdRoute,
+}
+
+const AppCCourseIdRouteWithChildren = AppCCourseIdRoute._addFileChildren(
+  AppCCourseIdRouteChildren,
+)
+
 interface AppRouteChildren {
-  AppCoursesRoute: typeof AppCoursesRoute
+  AppAindexRoute: typeof AppAindexRoute
   AppIndexRoute: typeof AppIndexRoute
-  AppCCourseIdRoute: typeof AppCCourseIdRoute
+  AppCCourseIdRoute: typeof AppCCourseIdRouteWithChildren
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppCoursesRoute: AppCoursesRoute,
+  AppAindexRoute: AppAindexRoute,
   AppIndexRoute: AppIndexRoute,
-  AppCCourseIdRoute: AppCCourseIdRoute,
+  AppCCourseIdRoute: AppCCourseIdRouteWithChildren,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -292,8 +283,6 @@ const rootRouteChildren: RootRouteChildren = {
   DemoClerkRoute: DemoClerkRoute,
   DemoTableRoute: DemoTableRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
-  DemoFormAddressRoute: DemoFormAddressRoute,
-  DemoFormSimpleRoute: DemoFormSimpleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
